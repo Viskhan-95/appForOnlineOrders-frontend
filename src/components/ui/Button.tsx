@@ -4,6 +4,7 @@ import { COLORS, GRADIENT_COLORS } from "../../utils/constans/colors";
 import { TYPOGRAPHY } from "../../utils/constans/typography";
 import { SIZES } from "../../utils/constans/sizes";
 import { LinearGradient } from "expo-linear-gradient";
+import { rw } from "../../utils/responsive";
 
 type ButtonProps = {
     children?: React.ReactNode;
@@ -56,6 +57,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
         height: SIZES.button.height,
+        width: rw(80),
     },
     text: {
         fontFamily: TYPOGRAPHY.bold,

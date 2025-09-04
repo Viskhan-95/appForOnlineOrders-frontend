@@ -8,6 +8,7 @@ export const COLORS = {
     textActive: "#000000",
     textLink: "#EDB216",
     textLinkSecondary: "#B28C2E",
+    textSubtitle: "#6C7072",
     success: "#000000",
     error: "#FF0000",
     warning: "#1EC625",

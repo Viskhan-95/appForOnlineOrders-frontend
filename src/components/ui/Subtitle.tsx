@@ -1,0 +1,26 @@
+import React from "react";
+import { StyleSheet, Text } from "react-native";
+import { COLORS } from "../../utils/constans/colors";
+import { TYPOGRAPHY } from "../../utils/constans/typography";
+import { SIZES } from "../../utils/constans/sizes";
+
+type SubtitleProps = {
+    children: React.ReactNode;
+}
+
+const Subtitle: React.FC<SubtitleProps> = ({ children }) => {
+    return (
+        <Text style={styles.subtitle}>{children}</Text>
+    )
+}
+
+export default Subtitle;
+
+const styles = StyleSheet.create({
+    subtitle: {
+        flex: 1,
+        color: COLORS.textSubtitle,
+        fontFamily: TYPOGRAPHY.regular,
+        fontSize: SIZES.fontSize.sm,
+    },
+});

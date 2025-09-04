@@ -9,25 +9,24 @@ import {
 import Header from "../../components/ui/Header";
 import Button from "../../components/ui/Button";
 import { COLORS, GRADIENT_COLORS } from "../../utils/constans/colors";
-import { SIZES } from "../../utils/constans/sizes";
-import { TYPOGRAPHY } from "../../utils/constans/typography";
 import { rw, rh } from "../../utils/responsive";
+import Title from "../../components/ui/Title";
 
 const WelcomeScreen: React.FC = () => {
     return (
         <>
             <SafeAreaView style={styles.container}>
                 <ImageBackground
-                    source={require("../../assets/images/background.jpg")}
+                    source={require("../../assets/images/backgroundWelcome.jpg")}
                     style={styles.image}
                 />
                 <View style={styles.header}>
                     <Header />
                 </View>
                 <View style={styles.content}>
-                    <Text style={styles.text}>
+                    <Title textSize="xxl">
                         Вкусная еда — это то, что вы заслуживаете здесь и сейчас
-                    </Text>
+                    </Title>
                     <Button
                         gradientColors={GRADIENT_COLORS.primary}
                         textColor={COLORS.textActive}
@@ -71,14 +70,5 @@ const styles = StyleSheet.create({
     content: {
         flex: 1,
         justifyContent: "space-evenly",
-        // gap: rh(4),
-    },
-    text: {
-        fontSize: SIZES.fontSize.xxl,
-        color: COLORS.text,
-        fontFamily: TYPOGRAPHY.bold,
-        fontWeight: "bold",
-        width: rw(75),
-        lineHeight: rh(4),
     },
 });

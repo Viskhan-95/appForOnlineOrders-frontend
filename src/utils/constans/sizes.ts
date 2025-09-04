@@ -35,6 +35,12 @@ export const SIZES = {
         title: getResponsiveFontSize(28),
         largeTitle: getResponsiveFontSize(32),
     },
+    
+    borderRadius: {
+        small: rw(2),
+        medium: rw(4),
+        large: rw(6),
+    },
     // Responsive размеры компонентов
     button: {
         height: rh(6),
