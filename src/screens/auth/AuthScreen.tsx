@@ -72,7 +72,8 @@ const AuthScreen: React.FC = () => {
                         >
                             <GradientText
                                 gradientColors={GRADIENT_COLORS.primary}
-                                fontSize={SIZES.fontSize.sm}
+                                fontSize={SIZES.fontSize.lg}
+                                textAlign="right"
                             >
                                 Забыли пароль?
                             </GradientText>
@@ -98,6 +99,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: COLORS.background,
+        alignItems: "center",
     },
     image: {
         width: rw(100),
@@ -111,7 +113,6 @@ const styles = StyleSheet.create({
     scrollContent: {
         flexGrow: 1,
         justifyContent: "space-between",
-        alignItems: "center",
         paddingVertical: rh(5),
     },
     header: {
@@ -127,11 +128,9 @@ const styles = StyleSheet.create({
     },
     formContainer: {
         flex: 1,
-        justifyContent: "center",
         gap: rh(3),
     },
     forgotPassword: {
-        alignSelf: "center",
         marginVertical: rh(2),
     },
 });
