@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
         flex: 1,
         color: COLORS.text,
         fontFamily: TYPOGRAPHY.regular,
-        fontSize: SIZES.fontSize.sm,
+        fontSize: SIZES.fontSize.lg,
         paddingLeft: rw(4),
     },
     eyeButton: {},

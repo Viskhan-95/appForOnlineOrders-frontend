@@ -17,6 +17,7 @@ import FormInput from "../../components/ui/FormInput";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { rh, rw } from "../../utils/responsive";
 import Button from "../../components/ui/Button";
+import GradientText from "../../components/ui/GradientText";
 
 const AuthScreen: React.FC = () => {
     const [email, setEmail] = useState("");
@@ -28,42 +29,66 @@ const AuthScreen: React.FC = () => {
     };
 
     return (
-        <KeyboardAwareScrollView>
-            <SafeAreaView style={styles.container}>
-                <ImageBackground
-                    source={require("../../assets/images/backgroundAuth.jpg")}
-                    style={styles.image}
-                />
-                <Header />
-                <Title textSize="xxl">Войдите в свой профиль</Title>
-                <Subtitle>Войдите, чтобы продолжить</Subtitle>
-                <FormInput
-                    icon={require("../../assets/icons/email.png")}
-                    placeholder="Введите email"
-                    value={email}
-                    onChangeText={setEmail}
-                />
-                <FormInput
-                    iconPassword={require("../../assets/icons/password.png")}
-                    iconEyeOff={require("../../assets/icons/eye-off.png")}
-                    iconEye={require("../../assets/icons/eye.png")}
-                    placeholder="Введите пароль"
-                    value={password}
-                    onChangeText={setPassword}
-                    secureTextEntry={!isPasswordVisible}
-                    onTogglePassword={togglePasswordVisibility}
-                    isPasswordVisible={isPasswordVisible}
-                />
-                <TouchableOpacity
-                // onPress={() => navigation.navigate("ForgotPassword")}
+        <View style={styles.container}>
+            <ImageBackground
+                source={require("../../assets/images/backgroundAuth.jpg")}
+                style={styles.image}
+            />
+            <SafeAreaView style={styles.safeArea}>
+                <KeyboardAwareScrollView
+                    contentContainerStyle={styles.scrollContent}
+                    showsVerticalScrollIndicator={false}
                 >
-                    <Text style={styles.forgotPasswordText}>Забыли пароль?</Text>
-                </TouchableOpacity>
-                <Button>
-                    <Text>Войти</Text>
-                </Button>
+                    <View style={styles.header}>
+                        <Header />
+                        <View style={styles.titleContainer}>
+                            <Title textSize="xxl">Войдите в свой профиль</Title>
+                            <Subtitle>Войдите, чтобы продолжить</Subtitle>
+                        </View>
+                    </View>
+
+                    <View style={styles.formContainer}>
+                        <FormInput
+                            icon={require("../../assets/icons/email.png")}
+                            placeholder="Введите email"
+                            value={email}
+                            onChangeText={setEmail}
+                        />
+                        <FormInput
+                            iconPassword={require("../../assets/icons/password.png")}
+                            iconEyeOff={require("../../assets/icons/eye-off.png")}
+                            iconEye={require("../../assets/icons/eye.png")}
+                            placeholder="Введите пароль"
+                            value={password}
+                            onChangeText={setPassword}
+                            secureTextEntry={!isPasswordVisible}
+                            onTogglePassword={togglePasswordVisibility}
+                            isPasswordVisible={isPasswordVisible}
+                        />
+
+                        <TouchableOpacity
+                            style={styles.forgotPassword}
+                            // onPress={() => navigation.navigate("ForgotPassword")}
+                        >
+                            <GradientText
+                                gradientColors={GRADIENT_COLORS.primary}
+                                fontSize={SIZES.fontSize.sm}
+                            >
+                                Забыли пароль?
+                            </GradientText>
+                        </TouchableOpacity>
+
+                        <Button
+                            backgroundColor={GRADIENT_COLORS.primary[0]}
+                            textColor={COLORS.background}
+                            onPress={() => console.log("Войти")}
+                        >
+                            <Text>Войти</Text>
+                        </Button>
+                    </View>
+                </KeyboardAwareScrollView>
             </SafeAreaView>
-        </KeyboardAwareScrollView>
+        </View>
     );
 };
 
@@ -72,10 +97,6 @@ export default AuthScreen;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        width: rw(100),
-        height: rh(100),
-        justifyContent: "space-between",
-        alignItems: "center",
         backgroundColor: COLORS.background,
     },
     image: {
@@ -84,14 +105,33 @@ const styles = StyleSheet.create({
         opacity: 0.3,
         position: "absolute",
     },
-    forgotPasswordGradient: {
-        paddingHorizontal: 12,
-        paddingVertical: 6,
-        borderRadius: 8,
+    safeArea: {
+        flex: 1,
     },
-    forgotPasswordText: {
-        color: COLORS.textLink,
-        fontFamily: TYPOGRAPHY.regular,
-        fontSize: SIZES.fontSize.sm,
+    scrollContent: {
+        flexGrow: 1,
+        justifyContent: "space-between",
+        alignItems: "center",
+        paddingVertical: rh(5),
+    },
+    header: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        paddingTop: rh(10),
+    },
+    titleContainer: {
+        alignItems: "center",
+        marginTop: rh(8),
+        gap: rh(2),
+    },
+    formContainer: {
+        flex: 1,
+        justifyContent: "center",
+        gap: rh(3),
+    },
+    forgotPassword: {
+        alignSelf: "center",
+        marginVertical: rh(2),
     },
 });
