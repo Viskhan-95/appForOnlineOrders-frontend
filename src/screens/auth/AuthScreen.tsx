@@ -9,7 +9,6 @@ import {
 } from "react-native";
 import { COLORS, GRADIENT_COLORS } from "../../utils/constans/colors";
 import { SIZES } from "../../utils/constans/sizes";
-import { TYPOGRAPHY } from "../../utils/constans/typography";
 import Header from "../../components/ui/Header";
 import Title from "../../components/ui/Title";
 import Subtitle from "../../components/ui/Subtitle";
@@ -38,6 +37,10 @@ const AuthScreen: React.FC = () => {
                 <KeyboardAwareScrollView
                     contentContainerStyle={styles.scrollContent}
                     showsVerticalScrollIndicator={false}
+                    keyboardShouldPersistTaps="handled"
+                    enableOnAndroid={true}
+                    extraScrollHeight={rh(19)}
+                    extraHeight={rh(19)}
                 >
                     <View style={styles.header}>
                         <Header />
@@ -104,7 +107,7 @@ const styles = StyleSheet.create({
     image: {
         width: rw(100),
         height: rh(100),
-        opacity: 0.3,
+        opacity: 0.15,
         position: "absolute",
     },
     safeArea: {

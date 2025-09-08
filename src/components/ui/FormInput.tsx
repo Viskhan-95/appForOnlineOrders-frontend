@@ -2,6 +2,7 @@ import React from "react";
 import {
     Image,
     ImageSourcePropType,
+    KeyboardTypeOptions,
     StyleSheet,
     TextInput,
     TouchableOpacity,
@@ -23,6 +24,7 @@ type FormInputProps = {
     onChangeText: (text: string) => void;
     onTogglePassword?: () => void;
     isPasswordVisible?: boolean;
+    keyboardType?: KeyboardTypeOptions;
 };
 
 const FormInput: React.FC<FormInputProps> = ({
@@ -50,14 +52,8 @@ const FormInput: React.FC<FormInputProps> = ({
                 onChangeText={onChangeText}
             />
             {onTogglePassword && (
-                <TouchableOpacity
-                    onPress={onTogglePassword}
-                    style={styles.eyeButton}
-                >
-                    <Image
-                        source={isPasswordVisible ? iconEye : iconEyeOff}
-                        style={styles.iconEye}
-                    />
+                <TouchableOpacity onPress={onTogglePassword}>
+                    <Image source={isPasswordVisible ? iconEye : iconEyeOff} />
                 </TouchableOpacity>
             )}
         </View>
@@ -86,6 +82,4 @@ const styles = StyleSheet.create({
         fontSize: SIZES.fontSize.lg,
         paddingLeft: rw(4),
     },
-    eyeButton: {},
-    iconEye: {},
 });
