@@ -11,6 +11,7 @@ type ButtonProps = {
     backgroundColor?: string;
     textColor?: string;
     gradientColors?: readonly string[];
+    disabled?: boolean
     onPress?: () => void;
 };
 

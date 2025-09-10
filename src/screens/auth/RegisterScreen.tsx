@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import StepOne from "./steps/StepOne";
 import StepTwo from "./steps/StepTwo";
+import StepThree from "./steps/StepThree";
 
 const RegisterScreen: React.FC = () => {
     const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
@@ -21,9 +22,9 @@ const RegisterScreen: React.FC = () => {
 
     return (
         <FormProvider {...methods}>
-            <StepTwo />
             {/* <StepOne /> */}
-            
+            {/* <StepTwo /> */}
+            <StepThree />
         </FormProvider>
     );
 };

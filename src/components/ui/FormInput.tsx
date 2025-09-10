@@ -25,6 +25,9 @@ type FormInputProps = {
     onTogglePassword?: () => void;
     isPasswordVisible?: boolean;
     keyboardType?: KeyboardTypeOptions;
+    onFocus?: () => void;
+    onBlur?: () => void;
+    editable?: boolean;
 };
 
 const FormInput: React.FC<FormInputProps> = ({
@@ -38,6 +41,9 @@ const FormInput: React.FC<FormInputProps> = ({
     onChangeText,
     onTogglePassword,
     isPasswordVisible,
+    onFocus,
+    onBlur,
+    editable,
 }) => {
     return (
         <View style={styles.container}>
@@ -50,6 +56,9 @@ const FormInput: React.FC<FormInputProps> = ({
                 secureTextEntry={secureTextEntry}
                 value={value}
                 onChangeText={onChangeText}
+                onFocus={onFocus}
+                onBlur={onBlur}
+                editable={editable}
             />
             {onTogglePassword && (
                 <TouchableOpacity onPress={onTogglePassword}>
