@@ -3,6 +3,7 @@ import { StyleSheet, Text } from "react-native";
 import { COLORS } from "../../utils/constans/colors";
 import { TYPOGRAPHY } from "../../utils/constans/typography";
 import { SIZES } from "../../utils/constans/sizes";
+import { rh } from "../../utils/responsive";
 
 type SubtitleProps = {
     children: React.ReactNode;
@@ -22,5 +23,6 @@ const styles = StyleSheet.create({
         color: COLORS.textSubtitle,
         fontFamily: TYPOGRAPHY.regular,
         fontSize: SIZES.fontSize.sm,
+        marginBottom: rh(4)
     },
 });

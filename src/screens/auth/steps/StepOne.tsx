@@ -1,4 +1,4 @@
-import { useFormContext } from "react-hook-form";
+import { useFormContext, Controller } from "react-hook-form";
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { COLORS, GRADIENT_COLORS } from "../../../utils/constans/colors";
@@ -9,23 +9,24 @@ import FormInput from "../../../components/ui/FormInput";
 import Button from "../../../components/ui/Button";
 import { styles } from "./styles";
 import StepContainer from "./StepContainer";
+import { useNavigation } from "@react-navigation/native";
+import { rh } from "../../../utils/responsive";
 
-const StepOne = () => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [phone, setPhone] = useState("");
+type Props = { onNext: () => void };
+
+const StepOne: React.FC<Props> = ({ onNext }) => {
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
+    const navigation = useNavigation();
+    const {
+        control,
+        formState: { errors },
+    } = useFormContext();
 
     const togglePasswordVisibility = () => {
         setIsPasswordVisible(!isPasswordVisible);
     };
 
-    const {
-        register,
-        setValue,
-        formState: { errors },
-        trigger,
-    } = useFormContext();
     return (
         <StepContainer>
             <View style={styles.header}>
@@ -36,42 +37,87 @@ const StepOne = () => {
                 </View>
             </View>
             <View style={styles.formContainer}>
-                <FormInput
-                    icon={require("../../../assets/icons/email.png")}
-                    placeholder="Введите email"
-                    value={email}
-                    onChangeText={setEmail}
+                <Controller
+                    control={control}
+                    name="email"
+                    rules={{ required: true }}
+                    render={({ field: { value, onChange } }) => (
+                        <View style={styles.marginBottom}>
+                            <FormInput
+                                icon={require("../../../assets/icons/email.png")}
+                                placeholder="Email"
+                                value={value}
+                                onChangeText={onChange}
+                                keyboardType="email-address"
+                            />
+                            {!!errors.email && (
+                                <Text style={{ color: COLORS.error }}>
+                                    {String(errors.email.message)}
+                                </Text>
+                            )}
+                        </View>
+                    )}
                 />
-                <FormInput
-                    iconPassword={require("../../../assets/icons/password.png")}
-                    iconEyeOff={require("../../../assets/icons/eye-off.png")}
-                    iconEye={require("../../../assets/icons/eye.png")}
-                    placeholder="Введите пароль"
-                    value={password}
-                    onChangeText={setPassword}
-                    secureTextEntry={!isPasswordVisible}
-                    onTogglePassword={togglePasswordVisibility}
-                    isPasswordVisible={isPasswordVisible}
+
+                <Controller
+                    control={control}
+                    name="password"
+                    rules={{ required: true, minLength: 6 }}
+                    render={({ field: { value, onChange } }) => (
+                        <View style={styles.marginBottom}>
+                            <FormInput
+                                iconPassword={require("../../../assets/icons/password.png")}
+                                iconEyeOff={require("../../../assets/icons/eye-off.png")}
+                                iconEye={require("../../../assets/icons/eye.png")}
+                                placeholder="Пароль"
+                                value={value}
+                                onChangeText={onChange}
+                                secureTextEntry={!isPasswordVisible}
+                                onTogglePassword={togglePasswordVisibility}
+                                isPasswordVisible={isPasswordVisible}
+                            />
+                            {!!errors.password && (
+                                <Text style={{ color: COLORS.error }}>
+                                    {String(errors.password.message)}
+                                </Text>
+                            )}
+                        </View>
+                    )}
                 />
-                <FormInput
-                    icon={require("../../../assets/icons/phone.png")}
-                    placeholder="Введите номер телефона"
-                    keyboardType="name-phone-pad"
-                    value={phone}
-                    onChangeText={setPhone}
+
+                <Controller
+                    control={control}
+                    name="phone"
+                    rules={{ required: true, minLength: 10 }}
+                    render={({ field: { value, onChange } }) => (
+                        <View style={styles.marginBottom}>
+                            <FormInput
+                                icon={require("../../../assets/icons/phone.png")}
+                                placeholder="Номер телефона"
+                                value={value}
+                                onChangeText={onChange}
+                                keyboardType="phone-pad"
+                            />
+                            {!!errors.phone && (
+                                <Text style={{ color: COLORS.error }}>
+                                    {String(errors.phone.message)}
+                                </Text>
+                            )}
+                        </View>
+                    )}
                 />
             </View>
             <Button
                 backgroundColor={GRADIENT_COLORS.primary[0]}
                 textColor={COLORS.background}
-                onPress={() => console.log("Зарегистрироваться")}
+                onPress={onNext}
             >
                 <Text>Создать аккаунт</Text>
             </Button>
             <View style={styles.isAccount}>
                 <Text style={styles.isAccountText}>Уже есть аккаунт?</Text>
                 <TouchableOpacity
-                // onPress={() => navigation.navigate("ForgotPassword")}
+                // onPress={() => navigation.navigate("Auth")}
                 >
                     <Text style={styles.isAccountLink}>Войти?</Text>
                 </TouchableOpacity>

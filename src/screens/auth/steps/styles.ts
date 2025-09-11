@@ -34,7 +34,6 @@ export const styles = StyleSheet.create({
     },
     formContainer: {
         flex: 1,
-        gap: rh(3),
     },
     isAccount: {
         flex: 1,
@@ -51,4 +50,7 @@ export const styles = StyleSheet.create({
         color: COLORS.textLink,
         fontSize: SIZES.fontSize.lg,
     },
+    marginBottom: {
+        marginBottom: rh(3)
+    }
 });

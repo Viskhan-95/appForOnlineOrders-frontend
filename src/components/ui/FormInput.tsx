@@ -44,6 +44,7 @@ const FormInput: React.FC<FormInputProps> = ({
     onFocus,
     onBlur,
     editable,
+    keyboardType,
 }) => {
     return (
         <View style={styles.container}>
@@ -59,6 +60,7 @@ const FormInput: React.FC<FormInputProps> = ({
                 onFocus={onFocus}
                 onBlur={onBlur}
                 editable={editable}
+                keyboardType={keyboardType}
             />
             {onTogglePassword && (
                 <TouchableOpacity onPress={onTogglePassword}>

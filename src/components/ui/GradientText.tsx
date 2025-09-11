@@ -5,6 +5,7 @@ import MaskedView from "@react-native-masked-view/masked-view";
 import { GRADIENT_COLORS } from "../../utils/constans/colors";
 import { TYPOGRAPHY } from "../../utils/constans/typography";
 import { SIZES } from "../../utils/constans/sizes";
+import { rh } from "../../utils/responsive";
 
 type GradientTextProps = {
     children: React.ReactNode;
@@ -42,7 +43,7 @@ const GradientText: React.FC<GradientTextProps> = ({
 const styles = StyleSheet.create({
     maskedView: {
         flexDirection: "row",
-        height: 20,
+        height: rh(4),
     },
     text: {
         fontFamily: TYPOGRAPHY.regular,
@@ -51,7 +52,7 @@ const styles = StyleSheet.create({
     },
     gradient: {
         flex: 1,
-        height: 20,
+        height: rh(4),
     },
 });
 

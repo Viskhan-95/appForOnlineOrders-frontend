@@ -7,11 +7,30 @@ import { rh, rw } from "../../utils/responsive";
 
 type TitleProps = {
     children: React.ReactNode;
-    textSize?: "xs" | "sm" | "md" | "lg" | "xl" | "xxl" | "title" | "largeTitle";
+    textSize?:
+        | "xs"
+        | "sm"
+        | "md"
+        | "lg"
+        | "xl"
+        | "xxl"
+        | "title"
+        | "largeTitle";
 };
 
 const Title: React.FC<TitleProps> = ({ children, textSize = "title" }) => {
-    return <Text style={[styles.title, { fontSize: SIZES.fontSize[textSize] }]}>{children}</Text>;
+    return (
+        <Text
+            style={[
+                styles.title,
+                {
+                    fontSize: SIZES.fontSize[textSize],
+                },
+            ]}
+        >
+            {children}
+        </Text>
+    );
 };
 
 export default Title;
