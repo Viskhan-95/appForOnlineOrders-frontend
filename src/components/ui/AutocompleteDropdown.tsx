@@ -18,6 +18,7 @@ type AutocompleteDropdownProps = {
     visible: boolean;
     width?: number; 
     noResultsText?: string;
+    loading?: boolean;
 };
 
 const AutocompleteDropdownBase: React.FC<AutocompleteDropdownProps> = ({
@@ -27,6 +28,7 @@ const AutocompleteDropdownBase: React.FC<AutocompleteDropdownProps> = ({
     visible,
     width,
     noResultsText = "Ничего не найдено",
+    loading,
 }) => {
     if (!visible) return null;
 
@@ -36,7 +38,11 @@ const AutocompleteDropdownBase: React.FC<AutocompleteDropdownProps> = ({
         <View
             style={[styles.dropdown, { top, width: width ? width : undefined }]}
         >
-            {hasOptions ? (
+            {loading ? (
+                <View style={styles.noResultsWrap}>
+                    <Text style={styles.noResultsText}>Загрузка...</Text>
+                </View>
+            ) : hasOptions ? (
                 <ScrollView keyboardShouldPersistTaps="handled">
                     {options.map((o) => (
                         <TouchableOpacity

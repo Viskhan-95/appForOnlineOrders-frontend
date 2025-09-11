@@ -14,9 +14,10 @@ type Props = {
     onPick: (opt: StreetOption) => void;
     focused: boolean;
     setFocused: (v: boolean) => void;
+    loading?: boolean;
 };
 
-const StreetField: React.FC<Props> = ({
+const StreetFieldBase: React.FC<Props> = ({
     value,
     error,
     onChange,
@@ -24,6 +25,7 @@ const StreetField: React.FC<Props> = ({
     onPick,
     focused,
     setFocused,
+    loading,
 }) => {
     return (
         <View>
@@ -45,13 +47,13 @@ const StreetField: React.FC<Props> = ({
                 top={rh(7)}
                 width={rw(80)}
                 options={options}
-                visible={
-                    focused && value.trim().length >= 3 && options.length >= 0
-                }
+                visible={focused && value.trim().length >= 3}
+                loading={loading}
                 onSelect={(o) => onPick(o as any)}
             />
         </View>
     );
 };
 
+const StreetField = React.memo(StreetFieldBase);
 export default StreetField;

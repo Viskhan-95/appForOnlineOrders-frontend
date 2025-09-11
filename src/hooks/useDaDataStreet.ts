@@ -1,5 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { suggestStreet, type StreetOption } from "../services/dadata";
+import { LruCache, createDebouncedAbortableFetcher } from "../utils/network";
+
+const cache = new LruCache<string, StreetOption[]>(150, 10 * 60 * 1000);
 
 export function useDaDataStreet(
     parentFiasId?: string,
@@ -9,8 +12,26 @@ export function useDaDataStreet(
     const [options, setOptions] = useState<StreetOption[]>([]);
     const [loading, setLoading] = useState(false);
 
-    const ctrlRef = useRef<AbortController | null>(null);
-    const debounceRef = useRef<NodeJS.Timeout | null>(null);
+    const fetcher = useMemo(
+        () =>
+            createDebouncedAbortableFetcher<
+                [q: string, pId?: string, pKind?: "city" | "settlement"],
+                StreetOption[]
+            >(async (signal, q, pId, pKind) => {
+                if (!pId) return [];
+                const key = `street:${pId}:${q}`;
+                const cached = cache.get(key);
+                if (cached) return cached;
+                const res = await suggestStreet(
+                    q,
+                    { fiasId: pId, kind: (pKind ?? "city") as any },
+                    signal
+                );
+                cache.set(key, res);
+                return res;
+            }, 300),
+        []
+    );
 
     useEffect(() => {
         const q = query.trim();
@@ -19,32 +40,11 @@ export function useDaDataStreet(
             return;
         }
         setLoading(true);
-        if (debounceRef.current) clearTimeout(debounceRef.current);
-        debounceRef.current = setTimeout(async () => {
-            try {
-                ctrlRef.current?.abort();
-                const ctrl = new AbortController();
-                ctrlRef.current = ctrl;
-                const res = await suggestStreet(
-                    q,
-                    {
-                        fiasId: parentFiasId,
-                        kind: (parentKind ?? "city") as any,
-                    },
-                    ctrl.signal
-                );
-                setOptions(res);
-            } catch {
-                setOptions([]);
-            } finally {
-                setLoading(false);
-            }
-        }, 300);
-        return () => {
-            if (debounceRef.current) clearTimeout(debounceRef.current);
-            ctrlRef.current?.abort();
-        };
-    }, [query, parentFiasId, parentKind]);
+        fetcher(q, parentFiasId, parentKind)
+            .then(setOptions)
+            .catch(() => setOptions([]))
+            .finally(() => setLoading(false));
+    }, [query, parentFiasId, parentKind, fetcher]);
 
     return { query, setQuery, options, setOptions, loading } as const;
 }

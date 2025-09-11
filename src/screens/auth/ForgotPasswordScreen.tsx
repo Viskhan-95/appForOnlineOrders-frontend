@@ -18,8 +18,8 @@ import { COLORS, GRADIENT_COLORS } from "../../utils/constans/colors";
 
 const ForgotPassword: React.FC = () => {
     const [code, setCode] = useState("");
-    const [isCodeSent, setIsCodeSent] = useState(true);
-    const [isCodeVerified, setIsCodeVerified] = useState(true);
+    const [isCodeSent, setIsCodeSent] = useState(false);
+    const [isCodeVerified, setIsCodeVerified] = useState(false);
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
     const togglePasswordVisibility = () => {

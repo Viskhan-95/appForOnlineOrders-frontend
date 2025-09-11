@@ -35,12 +35,14 @@ const StepThree: React.FC<Props> = ({ onPrev, onNext }) => {
         setQuery: setCityQuery,
         options: cityOptions,
         setOptions: setCityOptions,
+        loading: loadingCity,
     } = useDaDataCity();
     const {
         query: streetQuery,
         setQuery: setStreetQuery,
         options: streetOptions,
         setOptions: setStreetOptions,
+        loading: loadingStreet,
     } = useDaDataStreet(selectedCity?.fiasId, selectedCity?.kind);
 
     const house = useWatch({ name: "house" });
@@ -105,6 +107,7 @@ const StepThree: React.FC<Props> = ({ onPrev, onNext }) => {
                         onPick={pickCity}
                         focused={cityFocused}
                         setFocused={setCityFocused}
+                        loading={loadingCity}
                     />
                 </View>
 
@@ -124,6 +127,7 @@ const StepThree: React.FC<Props> = ({ onPrev, onNext }) => {
                         onPick={(o) => pickStreet(o.label, (o as any).fiasId)}
                         focused={streetFocused}
                         setFocused={setStreetFocused}
+                        loading={loadingStreet}
                     />
                 </View>
 

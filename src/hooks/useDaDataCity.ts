@@ -1,13 +1,29 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { suggestCity, type CityOption } from "../services/dadata";
+import { LruCache, createDebouncedAbortableFetcher } from "../utils/network";
+
+const cache = new LruCache<string, CityOption[]>(150, 10 * 60 * 1000);
 
 export function useDaDataCity() {
     const [query, setQuery] = useState("");
     const [options, setOptions] = useState<CityOption[]>([]);
     const [loading, setLoading] = useState(false);
 
-    const ctrlRef = useRef<AbortController | null>(null);
-    const debounceRef = useRef<NodeJS.Timeout | null>(null);
+    const fetcher = useMemo(
+        () =>
+            createDebouncedAbortableFetcher<[q: string], CityOption[]>(
+                async (signal, q) => {
+                    const key = `city:${q}`;
+                    const cached = cache.get(key);
+                    if (cached) return cached;
+                    const res = await suggestCity(q, undefined, signal);
+                    cache.set(key, res);
+                    return res;
+                },
+                300
+            ),
+        []
+    );
 
     useEffect(() => {
         const q = query.trim();
@@ -16,25 +32,11 @@ export function useDaDataCity() {
             return;
         }
         setLoading(true);
-        if (debounceRef.current) clearTimeout(debounceRef.current);
-        debounceRef.current = setTimeout(async () => {
-            try {
-                ctrlRef.current?.abort();
-                const ctrl = new AbortController();
-                ctrlRef.current = ctrl;
-                const res = await suggestCity(q, undefined, ctrl.signal);
-                setOptions(res);
-            } catch {
-                setOptions([]);
-            } finally {
-                setLoading(false);
-            }
-        }, 300);
-        return () => {
-            if (debounceRef.current) clearTimeout(debounceRef.current);
-            ctrlRef.current?.abort();
-        };
-    }, [query]);
+        fetcher(q)
+            .then(setOptions)
+            .catch(() => setOptions([]))
+            .finally(() => setLoading(false));
+    }, [query, fetcher]);
 
     return { query, setQuery, options, setOptions, loading } as const;
 }

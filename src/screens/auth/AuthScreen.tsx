@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     SafeAreaView,
     View,
@@ -21,6 +21,7 @@ import { useAppNavigation } from "../../hooks/useAppNavigation";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, type LoginFormData } from "../../validations/schemas";
+import useAuth from "../../hooks/useAuth";
 
 const AuthScreen: React.FC = () => {
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -41,10 +42,24 @@ const AuthScreen: React.FC = () => {
         resolver: zodResolver(loginSchema),
     });
 
-    const onSubmit = (data: LoginFormData) => {
-        // TODO: интеграция с API авторизации
-        console.log("submit login", data);
+    const { login, isLoading, error, clearAuthError } = useAuth();
+
+    const onSubmit = async (data: LoginFormData) => {
+        try {
+            await login(data);
+            // Успешный вход - навигация произойдет автоматически
+        } catch (err) {
+            // Ошибка уже обработана в Redux
+            console.error("Login failed:", err);
+        }
     };
+
+    // Автоматическая очистка ошибок
+    useEffect(() => {
+        if (error) {
+            setTimeout(() => clearAuthError(), 5000);
+        }
+    }, [error, clearAuthError]);
 
     return (
         <View style={styles.container}>
@@ -70,6 +85,27 @@ const AuthScreen: React.FC = () => {
                     </View>
 
                     <View style={styles.formContainer}>
+                        {/* Отображение ошибок */}
+                        {error && (
+                            <View
+                                style={{
+                                    marginBottom: 16,
+                                    padding: 12,
+                                    backgroundColor: "rgba(255, 0, 0, 0.1)",
+                                    borderRadius: 8,
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        color: COLORS.error,
+                                        textAlign: "center",
+                                    }}
+                                >
+                                    {error}
+                                </Text>
+                            </View>
+                        )}
+
                         <Controller
                             control={control}
                             name="email"
@@ -136,8 +172,9 @@ const AuthScreen: React.FC = () => {
                             gradientColors={GRADIENT_COLORS.primary}
                             textColor={COLORS.background}
                             onPress={handleSubmit(onSubmit)}
+                            disabled={isLoading}
                         >
-                            <Text>Войти</Text>
+                            <Text>{isLoading ? "Вход..." : "Войти"}</Text>
                         </Button>
                     </View>
                 </KeyboardAwareScrollView>
