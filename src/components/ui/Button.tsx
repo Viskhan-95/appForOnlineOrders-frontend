@@ -20,11 +20,12 @@ const Button: React.FC<ButtonProps> = ({
     backgroundColor,
     textColor = COLORS.background,
     gradientColors,
+    onPress,
     ...props
 }) => {
     if (gradientColors) {
         return (
-            <TouchableOpacity>
+            <TouchableOpacity onPress={onPress}>
                 <LinearGradient
                     colors={gradientColors as [string, string, ...string[]]}
                     style={styles.button}
@@ -39,7 +40,7 @@ const Button: React.FC<ButtonProps> = ({
     }
 
     return (
-        <TouchableOpacity
+        <TouchableOpacity onPress={onPress}
             style={[styles.button, { backgroundColor }]}
             {...props}
         >

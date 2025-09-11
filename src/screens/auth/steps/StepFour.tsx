@@ -10,8 +10,7 @@ import React from "react";
 
 type Props = { onBackToAddress: () => void };
 
-
-const StepFour: React.FC<Props> = ({ onBackToAddress }) => {
+const StepFour: React.FC<Props> = () => {
     return (
         <StepContainer>
             <View
@@ -36,7 +35,7 @@ const StepFour: React.FC<Props> = ({ onBackToAddress }) => {
                 </View>
             </View>
             <Button
-                backgroundColor={GRADIENT_COLORS.primary[0]}
+                gradientColors={GRADIENT_COLORS.primary}
                 textColor={COLORS.background}
                 onPress={() => {}}
             >

@@ -19,7 +19,8 @@ const MIN_Q = 3;
 // Подсказки для города/села
 export async function suggestCity(
     query: string,
-    countryIso = COUNTRY_ISO
+    countryIso = COUNTRY_ISO,
+    signal?: AbortSignal
 ): Promise<CityOption[]> {
     const q = query.trim();
     if (q.length < MIN_Q) return [];
@@ -36,7 +37,9 @@ export async function suggestCity(
         restrict_value: false,
     };
 
-    const { data } = await dadataClient.post<DaDataSuggestResp>("", body);
+    const { data } = await dadataClient.post<DaDataSuggestResp>("", body, {
+        signal,
+    });
 
     return (data?.suggestions ?? [])
         .map((s) => {
@@ -55,7 +58,8 @@ export async function suggestCity(
 // Подсказки для улицы (по выбранному городу/селу)
 export async function suggestStreet(
     query: string,
-    parent: { fiasId: string; kind: "city" | "settlement" }
+    parent: { fiasId: string; kind: "city" | "settlement" },
+    signal?: AbortSignal
 ): Promise<StreetOption[]> {
     const q = query.trim();
     if (q.length < MIN_Q || !parent?.fiasId) return [];
@@ -75,7 +79,9 @@ export async function suggestStreet(
         restrict_value: true,
     };
 
-    const { data } = await dadataClient.post<DaDataSuggestResp>("", body);
+    const { data } = await dadataClient.post<DaDataSuggestResp>("", body, {
+        signal,
+    });
 
     return (data?.suggestions ?? [])
         .map((s) => {

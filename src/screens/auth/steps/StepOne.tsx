@@ -9,15 +9,14 @@ import FormInput from "../../../components/ui/FormInput";
 import Button from "../../../components/ui/Button";
 import { styles } from "./styles";
 import StepContainer from "./StepContainer";
-import { useNavigation } from "@react-navigation/native";
-import { rh } from "../../../utils/responsive";
+import { useAppNavigation } from "../../../hooks/useAppNavigation";
 
 type Props = { onNext: () => void };
 
 const StepOne: React.FC<Props> = ({ onNext }) => {
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
-    const navigation = useNavigation();
+    const navigation = useAppNavigation();
     const {
         control,
         formState: { errors },
@@ -60,7 +59,7 @@ const StepOne: React.FC<Props> = ({ onNext }) => {
                 />
 
                 <Controller
-                    control={control}
+                    // control={control}
                     name="password"
                     rules={{ required: true, minLength: 6 }}
                     render={({ field: { value, onChange } }) => (
@@ -86,7 +85,7 @@ const StepOne: React.FC<Props> = ({ onNext }) => {
                 />
 
                 <Controller
-                    control={control}
+                    // control={control}
                     name="phone"
                     rules={{ required: true, minLength: 10 }}
                     render={({ field: { value, onChange } }) => (
@@ -108,7 +107,7 @@ const StepOne: React.FC<Props> = ({ onNext }) => {
                 />
             </View>
             <Button
-                backgroundColor={GRADIENT_COLORS.primary[0]}
+                gradientColors={GRADIENT_COLORS.primary}
                 textColor={COLORS.background}
                 onPress={onNext}
             >
@@ -116,9 +115,7 @@ const StepOne: React.FC<Props> = ({ onNext }) => {
             </Button>
             <View style={styles.isAccount}>
                 <Text style={styles.isAccountText}>Уже есть аккаунт?</Text>
-                <TouchableOpacity
-                // onPress={() => navigation.navigate("Auth")}
-                >
+                <TouchableOpacity onPress={() => navigation.navigate("Auth")}>
                     <Text style={styles.isAccountLink}>Войти?</Text>
                 </TouchableOpacity>
             </View>

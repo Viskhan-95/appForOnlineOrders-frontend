@@ -74,7 +74,7 @@ const StepTwo: React.FC<Props> = ({ onPrev, onNext }) => {
                 />
             </View>
             <Button
-                backgroundColor={GRADIENT_COLORS.primary[0]}
+                gradientColors={GRADIENT_COLORS.primary}
                 textColor={COLORS.background}
                 onPress={onNext}
             >

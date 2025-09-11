@@ -3,7 +3,6 @@ import {
     SafeAreaView,
     View,
     Text,
-    StyleSheet,
     ImageBackground,
     TouchableOpacity,
 } from "react-native";
@@ -14,17 +13,37 @@ import Title from "../../components/ui/Title";
 import Subtitle from "../../components/ui/Subtitle";
 import FormInput from "../../components/ui/FormInput";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { rh, rw } from "../../utils/responsive";
+import { rh } from "../../utils/responsive";
 import Button from "../../components/ui/Button";
 import GradientText from "../../components/ui/GradientText";
+import { styles } from "./styles";
+import { useAppNavigation } from "../../hooks/useAppNavigation";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loginSchema, type LoginFormData } from "../../validations/schemas";
 
 const AuthScreen: React.FC = () => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
     const togglePasswordVisibility = () => {
         setIsPasswordVisible(!isPasswordVisible);
+    };
+
+    const navigation = useAppNavigation();
+
+    const {
+        control,
+        formState: { errors },
+        handleSubmit,
+    } = useForm<LoginFormData>({
+        defaultValues: { email: "", password: "" },
+        mode: "onChange",
+        resolver: zodResolver(loginSchema),
+    });
+
+    const onSubmit = (data: LoginFormData) => {
+        // TODO: интеграция с API авторизации
+        console.log("submit login", data);
     };
 
     return (
@@ -51,27 +70,58 @@ const AuthScreen: React.FC = () => {
                     </View>
 
                     <View style={styles.formContainer}>
-                        <FormInput
-                            icon={require("../../assets/icons/email.png")}
-                            placeholder="Введите email"
-                            value={email}
-                            onChangeText={setEmail}
+                        <Controller
+                            control={control}
+                            name="email"
+                            render={({ field: { value, onChange } }) => (
+                                <View>
+                                    <FormInput
+                                        icon={require("../../assets/icons/email.png")}
+                                        placeholder="Email"
+                                        value={value}
+                                        onChangeText={onChange}
+                                        keyboardType="email-address"
+                                    />
+                                    {!!errors.email && (
+                                        <Text style={{ color: COLORS.error }}>
+                                            {String(errors.email.message)}
+                                        </Text>
+                                    )}
+                                </View>
+                            )}
                         />
-                        <FormInput
-                            iconPassword={require("../../assets/icons/password.png")}
-                            iconEyeOff={require("../../assets/icons/eye-off.png")}
-                            iconEye={require("../../assets/icons/eye.png")}
-                            placeholder="Введите пароль"
-                            value={password}
-                            onChangeText={setPassword}
-                            secureTextEntry={!isPasswordVisible}
-                            onTogglePassword={togglePasswordVisibility}
-                            isPasswordVisible={isPasswordVisible}
+                        <Controller
+                            control={control}
+                            name="password"
+                            render={({ field: { value, onChange } }) => (
+                                <View>
+                                    <FormInput
+                                        iconPassword={require("../../assets/icons/password.png")}
+                                        iconEyeOff={require("../../assets/icons/eye-off.png")}
+                                        iconEye={require("../../assets/icons/eye.png")}
+                                        placeholder="Пароль"
+                                        value={value}
+                                        onChangeText={onChange}
+                                        secureTextEntry={!isPasswordVisible}
+                                        onTogglePassword={
+                                            togglePasswordVisibility
+                                        }
+                                        isPasswordVisible={isPasswordVisible}
+                                    />
+                                    {!!errors.password && (
+                                        <Text style={{ color: COLORS.error }}>
+                                            {String(errors.password.message)}
+                                        </Text>
+                                    )}
+                                </View>
+                            )}
                         />
 
                         <TouchableOpacity
                             style={styles.forgotPassword}
-                            // onPress={() => navigation.navigate("ForgotPassword")}
+                            onPress={() =>
+                                navigation.navigate("ForgotPassword")
+                            }
                         >
                             <GradientText
                                 gradientColors={GRADIENT_COLORS.primary}
@@ -83,9 +133,9 @@ const AuthScreen: React.FC = () => {
                         </TouchableOpacity>
 
                         <Button
-                            backgroundColor={GRADIENT_COLORS.primary[0]}
+                            gradientColors={GRADIENT_COLORS.primary}
                             textColor={COLORS.background}
-                            onPress={() => console.log("Войти")}
+                            onPress={handleSubmit(onSubmit)}
                         >
                             <Text>Войти</Text>
                         </Button>
@@ -97,43 +147,3 @@ const AuthScreen: React.FC = () => {
 };
 
 export default AuthScreen;
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: COLORS.background,
-        alignItems: "center",
-    },
-    image: {
-        width: rw(100),
-        height: rh(100),
-        opacity: 0.15,
-        position: "absolute",
-    },
-    safeArea: {
-        flex: 1,
-    },
-    scrollContent: {
-        flexGrow: 1,
-        justifyContent: "space-between",
-        paddingVertical: rh(5),
-    },
-    header: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        paddingTop: rh(10),
-    },
-    titleContainer: {
-        alignItems: "center",
-        marginTop: rh(8),
-        gap: rh(2),
-    },
-    formContainer: {
-        flex: 1,
-        gap: rh(3),
-    },
-    forgotPassword: {
-        marginVertical: rh(2),
-    },
-});

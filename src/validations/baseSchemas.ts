@@ -28,11 +28,12 @@ export const nameSchema = z
 // Композитные схемы
 export const loginSchema = z.object({
     email: emailSchema,
-    password: z.string().min(1, "Пароль обязателен"),
+    password: passwordSchema,
 });
 
 export const forgotPasswordSchema = z.object({
     email: emailSchema,
+    password: passwordSchema,
 });
 
 // Типы для TypeScript

@@ -1,7 +1,6 @@
 import { StyleSheet } from "react-native";
-import { rh, rw } from "../../../utils/responsive";
-import { COLORS } from "../../../utils/constans/colors";
-import { SIZES } from "../../../utils/constans/sizes";
+import { COLORS } from "../../utils/constans/colors";
+import { rh, rw } from "../../utils/responsive";
 
 export const styles = StyleSheet.create({
     container: {
@@ -20,12 +19,13 @@ export const styles = StyleSheet.create({
     },
     scrollContent: {
         flexGrow: 1,
-        justifyContent: "space-between",
-        paddingVertical: rh(8),
+        paddingVertical: rh(5),
     },
     header: {
         flex: 1,
+        justifyContent: "center",
         alignItems: "center",
+        paddingTop: rh(10),
     },
     titleContainer: {
         alignItems: "center",
@@ -34,30 +34,11 @@ export const styles = StyleSheet.create({
     },
     formContainer: {
         flex: 1,
+        gap: rh(3),
         width: rw(80),
         alignSelf: "center",
     },
-    isAccount: {
-        flex: 1,
-        flexDirection: "row",
-        justifyContent: "center",
+    forgotPassword: {
         marginVertical: rh(2),
-        gap: rw(2),
-    },
-    isAccountText: {
-        color: COLORS.text,
-        fontSize: SIZES.fontSize.lg,
-    },
-    isAccountLink: {
-        color: COLORS.textLink,
-        fontSize: SIZES.fontSize.lg,
-    },
-    marginBottom: {
-        marginBottom: rh(2),
-    },
-    errorText: {
-        color: COLORS.error,
-        width: "100%",
-        alignSelf: "flex-start",
     },
 });

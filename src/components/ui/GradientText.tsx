@@ -49,6 +49,7 @@ const styles = StyleSheet.create({
         fontFamily: TYPOGRAPHY.regular,
         backgroundColor: "transparent",
         color: "black",
+        fontWeight: "bold"
     },
     gradient: {
         flex: 1,

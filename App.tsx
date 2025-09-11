@@ -6,8 +6,8 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 export type RootStackParamList = {
     Welcome: undefined;
     Auth: undefined;
-    // Register: undefined;
-    // ForgotPassword: undefined;
+    Register: undefined;
+    ForgotPassword: undefined;
     // Home: undefined;
 };
 

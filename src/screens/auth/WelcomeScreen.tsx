@@ -11,8 +11,11 @@ import Button from "../../components/ui/Button";
 import { COLORS, GRADIENT_COLORS } from "../../utils/constans/colors";
 import { rw, rh } from "../../utils/responsive";
 import Title from "../../components/ui/Title";
+import { useAppNavigation } from "../../hooks/useAppNavigation";
 
 const WelcomeScreen: React.FC = () => {
+    const navigation = useAppNavigation();
+
     return (
         <>
             <SafeAreaView style={styles.container}>
@@ -30,14 +33,15 @@ const WelcomeScreen: React.FC = () => {
                     <Button
                         gradientColors={GRADIENT_COLORS.primary}
                         textColor={COLORS.textActive}
+                        onPress={() => navigation.navigate("Auth")}
                     >
                         <Text>Войти</Text>
                     </Button>
 
-                    {/* С обычным цветом */}
                     <Button
                         backgroundColor={COLORS.backgroundSecondary}
                         textColor={COLORS.textLinkSecondary}
+                        onPress={() => navigation.navigate("Register")}
                     >
                         <Text>Зарегистрироваться</Text>
                     </Button>

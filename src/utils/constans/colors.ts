@@ -15,6 +15,6 @@ export const COLORS = {
 } as const;
 
 export const GRADIENT_COLORS = {
-    primary: ["#C69223", "#E1D24A"],
+    primary: ["#E1D24A", "#C69223", "#E1D24A", "#C69223"],
     secondary: ["#FF0000", "#00FF00"],
   } as const;
