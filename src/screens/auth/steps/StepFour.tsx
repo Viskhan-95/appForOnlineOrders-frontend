@@ -6,11 +6,29 @@ import Button from "../../../components/ui/Button";
 import { COLORS, GRADIENT_COLORS } from "../../../utils/constans/colors";
 import GradientText from "../../../components/ui/GradientText";
 import { SIZES } from "../../../utils/constans/sizes";
-import React from "react";
+import React, { useEffect } from "react";
+import { useAuth } from "../../../hooks/useAuth";
 
-type Props = { onBackToAddress: () => void };
+const StepFour: React.FC = () => {
+    const { clearRegistrationCompletedFlag, resetStep } = useAuth();
 
-const StepFour: React.FC<Props> = () => {
+    // Автоматическая навигация через 30 секунд
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            // Сбрасываем флаг регистрации и шаг, переходим в приложение
+            clearRegistrationCompletedFlag();
+            resetStep();
+        }, 30000);
+
+        return () => clearTimeout(timer);
+    }, [clearRegistrationCompletedFlag, resetStep]);
+
+    const handleContinue = () => {
+        // Сбрасываем флаг регистрации и шаг, переходим в приложение
+        clearRegistrationCompletedFlag();
+        resetStep();
+    };
+
     return (
         <StepContainer>
             <View
@@ -37,9 +55,9 @@ const StepFour: React.FC<Props> = () => {
             <Button
                 gradientColors={GRADIENT_COLORS.primary}
                 textColor={COLORS.background}
-                onPress={() => {}}
+                onPress={handleContinue}
             >
-                <Text>Далее</Text>
+                <Text>Перейти в приложение</Text>
             </Button>
         </StepContainer>
     );

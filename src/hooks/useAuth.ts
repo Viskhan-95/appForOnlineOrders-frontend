@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 import { useAppDispatch, useAppSelector } from "../store";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
     loginUser,
     registerUser,
@@ -11,6 +12,12 @@ import {
     restoreSession,
     clearError,
     clearAuth,
+    clearRegistrationCompleted,
+    setRegistrationStep,
+    resetRegistrationStep,
+    requestPasswordReset,
+    verifyResetCode,
+    confirmPasswordReset,
 } from "../store/slices/authSlice";
 import {
     LoginRequest,
@@ -61,26 +68,23 @@ export const useAuth = () => {
     );
 
     // Сброс пароля
-    const requestPasswordReset = useCallback(
+    const requestPasswordResetAction = useCallback(
         (data: ResetPasswordRequest) => {
-            // TODO: Создать отдельные thunks для сброса пароля
-            return dispatch(registerStart({ email: data.email }));
+            return dispatch(requestPasswordReset(data));
         },
         [dispatch]
     );
 
-    const verifyResetCode = useCallback(
+    const verifyResetCodeAction = useCallback(
         (data: ResetVerifyRequest) => {
-            // TODO: Создать отдельные thunks для сброса пароля
-            return dispatch(registerStart({ email: data.email }));
+            return dispatch(verifyResetCode(data));
         },
         [dispatch]
     );
 
-    const confirmPasswordReset = useCallback(
+    const confirmPasswordResetAction = useCallback(
         (data: ResetConfirmRequest) => {
-            // TODO: Создать отдельные thunks для сброса пароля
-            return dispatch(registerStart({ email: "" })); // Временное решение
+            return dispatch(confirmPasswordReset(data));
         },
         [dispatch]
     );
@@ -106,6 +110,33 @@ export const useAuth = () => {
     const clearAuthState = useCallback(() => {
         dispatch(clearAuth());
     }, [dispatch]);
+
+    const clearRegistrationCompletedFlag = useCallback(() => {
+        dispatch(clearRegistrationCompleted());
+    }, [dispatch]);
+
+    const setStep = useCallback(
+        (step: number) => {
+            dispatch(setRegistrationStep(step));
+        },
+        [dispatch]
+    );
+
+    const resetStep = useCallback(() => {
+        dispatch(resetRegistrationStep());
+    }, [dispatch]);
+
+    const clearStorage = useCallback(async () => {
+        try {
+            await AsyncStorage.multiRemove([
+                "access_token",
+                "refresh_token",
+                "user",
+            ]);
+        } catch (error) {
+            console.error("Ошибка очистки хранилища:", error);
+        }
+    }, []);
 
     // Вычисляемые значения
     const isLoggedIn = authState.isAuthenticated && authState.user !== null;
@@ -144,9 +175,9 @@ export const useAuth = () => {
         verifyRegistration,
 
         // Сброс пароля
-        requestPasswordReset,
-        verifyResetCode,
-        confirmPasswordReset,
+        requestPasswordReset: requestPasswordResetAction,
+        verifyResetCode: verifyResetCodeAction,
+        confirmPasswordReset: confirmPasswordResetAction,
 
         // Управление токенами
         refreshAuthToken,
@@ -156,6 +187,10 @@ export const useAuth = () => {
         // Утилиты
         clearAuthError,
         clearAuthState,
+        clearRegistrationCompletedFlag,
+        setStep,
+        resetStep,
+        clearStorage,
 
         // Проверки ролей
         hasRole,

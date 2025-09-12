@@ -26,6 +26,8 @@ const initialState: AuthState = {
     isAuthenticated: false,
     isLoading: false,
     error: null,
+    registrationCompleted: false,
+    registrationStep: 1,
 };
 
 // Async Thunks - асинхронные действия
@@ -186,6 +188,51 @@ export const logoutUser = createAsyncThunk(
     }
 );
 
+// Сброс пароля - запрос кода
+export const requestPasswordReset = createAsyncThunk(
+    "auth/requestPasswordReset",
+    async (data: ResetPasswordRequest, { rejectWithValue }) => {
+        try {
+            const response = await authService.requestPasswordReset(data);
+            return response;
+        } catch (error: any) {
+            return rejectWithValue(
+                error.response?.data?.message || "Ошибка запроса сброса пароля"
+            );
+        }
+    }
+);
+
+// Сброс пароля - верификация кода
+export const verifyResetCode = createAsyncThunk(
+    "auth/verifyResetCode",
+    async (data: ResetVerifyRequest, { rejectWithValue }) => {
+        try {
+            const response = await authService.verifyResetCode(data);
+            return response;
+        } catch (error: any) {
+            return rejectWithValue(
+                error.response?.data?.message || "Ошибка верификации кода"
+            );
+        }
+    }
+);
+
+// Сброс пароля - подтверждение с токеном
+export const confirmPasswordReset = createAsyncThunk(
+    "auth/confirmPasswordReset",
+    async (data: ResetConfirmRequest, { rejectWithValue }) => {
+        try {
+            const response = await authService.confirmPasswordReset(data);
+            return response;
+        } catch (error: any) {
+            return rejectWithValue(
+                error.response?.data?.message || "Ошибка сброса пароля"
+            );
+        }
+    }
+);
+
 // Восстановление сессии при запуске приложения
 export const restoreSession = createAsyncThunk(
     "auth/restoreSession",
@@ -232,6 +279,23 @@ const authSlice = createSlice({
             state.tokens = null;
             state.isAuthenticated = false;
             state.error = null;
+            state.registrationCompleted = false;
+            state.registrationStep = 1;
+        },
+
+        // Сброс флага завершения регистрации
+        clearRegistrationCompleted: (state) => {
+            state.registrationCompleted = false;
+        },
+
+        // Управление шагами регистрации
+        setRegistrationStep: (state, action) => {
+            state.registrationStep = action.payload;
+        },
+
+        // Сброс шага регистрации
+        resetRegistrationStep: (state) => {
+            state.registrationStep = 1;
         },
     },
     extraReducers: (builder) => {
@@ -269,6 +333,7 @@ const authSlice = createSlice({
                     refreshToken: action.payload.refreshToken,
                 };
                 state.isAuthenticated = true;
+                state.registrationCompleted = true;
                 state.error = null;
             })
             .addCase(registerUser.rejected, (state, action) => {
@@ -291,15 +356,65 @@ const authSlice = createSlice({
                     state.user = action.payload.user;
                     state.tokens = action.payload.tokens;
                     state.isAuthenticated = true;
+                    state.registrationCompleted = false;
+                    state.registrationStep = 1;
                 }
                 state.isLoading = false;
             })
             .addCase(restoreSession.rejected, (state) => {
                 state.isLoading = false;
                 state.isAuthenticated = false;
+                state.registrationCompleted = false;
+                state.registrationStep = 1;
+            })
+
+            // Password Reset
+            .addCase(requestPasswordReset.pending, (state) => {
+                state.isLoading = true;
+                state.error = null;
+            })
+            .addCase(requestPasswordReset.fulfilled, (state) => {
+                state.isLoading = false;
+                state.error = null;
+            })
+            .addCase(requestPasswordReset.rejected, (state, action) => {
+                state.isLoading = false;
+                state.error = action.payload as string;
+            })
+
+            .addCase(verifyResetCode.pending, (state) => {
+                state.isLoading = true;
+                state.error = null;
+            })
+            .addCase(verifyResetCode.fulfilled, (state) => {
+                state.isLoading = false;
+                state.error = null;
+            })
+            .addCase(verifyResetCode.rejected, (state, action) => {
+                state.isLoading = false;
+                state.error = action.payload as string;
+            })
+
+            .addCase(confirmPasswordReset.pending, (state) => {
+                state.isLoading = true;
+                state.error = null;
+            })
+            .addCase(confirmPasswordReset.fulfilled, (state) => {
+                state.isLoading = false;
+                state.error = null;
+            })
+            .addCase(confirmPasswordReset.rejected, (state, action) => {
+                state.isLoading = false;
+                state.error = action.payload as string;
             });
     },
 });
 
-export const { clearError, clearAuth } = authSlice.actions;
+export const {
+    clearError,
+    clearAuth,
+    clearRegistrationCompleted,
+    setRegistrationStep,
+    resetRegistrationStep,
+} = authSlice.actions;
 export default authSlice.reducer;

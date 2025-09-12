@@ -36,9 +36,7 @@ const ForgotPassword: React.FC = () => {
         resolver: zodResolver(forgotPasswordSchema),
     });
 
-    const onSubmit = (data: ForgotPasswordFormData) => {
-        console.log("submit forgot password", data);
-    };
+    const onSubmit = (data: ForgotPasswordFormData) => {};
 
     return (
         <View style={styles.container}>

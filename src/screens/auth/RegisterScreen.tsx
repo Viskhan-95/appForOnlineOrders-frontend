@@ -1,14 +1,25 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RegisterFormData, registerSchema } from "../../validations";
+import { useAuth } from "../../hooks/useAuth";
+import { useAppNavigation } from "../../hooks/useAppNavigation";
+import { RegisterRequest } from "../../types/auth";
 import StepOne from "./steps/StepOne";
 import StepTwo from "./steps/StepTwo";
 import StepThree from "./steps/StepThree";
 import StepFour from "./steps/StepFour";
 
 const RegisterScreen: React.FC = () => {
-    const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
+    const {
+        register,
+        isLoading,
+        error,
+        clearAuthError,
+        registrationStep,
+        setStep,
+    } = useAuth();
+    const navigation = useAppNavigation();
 
     const methods = useForm<RegisterFormData>({
         mode: "onChange",
@@ -23,12 +34,21 @@ const RegisterScreen: React.FC = () => {
             street: "",
             house: "",
             apartment: "",
-            role: ""
+            role: "",
         },
     });
 
-    const next = () => setStep((s) => (s < 4 ? ((s + 1) as typeof s) : s));
-    const prev = () => setStep((s) => (s > 1 ? ((s - 1) as typeof s) : s));
+    // Автоматическая очистка ошибок
+    useEffect(() => {
+        if (error) {
+            setTimeout(() => clearAuthError(), 5000);
+        }
+    }, [error, clearAuthError]);
+
+    const next = () =>
+        setStep(registrationStep < 4 ? registrationStep + 1 : registrationStep);
+    const prev = () =>
+        setStep(registrationStep > 1 ? registrationStep - 1 : registrationStep);
 
     // Валидация и переходы по шагам
     const handleNextStep1 = async () => {
@@ -47,23 +67,44 @@ const RegisterScreen: React.FC = () => {
     };
 
     const handleSubmitAll = methods.handleSubmit(async (data) => {
-        // TODO: отправка данных регистрации на бэкенд
-        // await api.register(data)
-        setStep(4);
+        try {
+            // Преобразуем данные формы в формат API
+            const registerData: RegisterRequest = {
+                email: data.email,
+                password: data.password,
+                name: `${data.firstName} ${data.lastName}`.trim(),
+                phone: data.phone,
+                address: `${data.city}, ${data.street}, д.${data.house}${
+                    data.apartment ? `, кв.${data.apartment}` : ""
+                }`,
+                role: (data.role as "USER" | "ADMIN" | "SUPERADMIN") || "USER",
+            };
+
+            const result = await register(registerData);
+
+            setStep(4);
+        } catch (err) {
+            // Ошибка уже обработана в Redux
+        }
     });
 
     return (
         <FormProvider {...methods}>
-            {step === 1 && <StepOne onNext={handleNextStep1} />}
-            {step === 2 && <StepTwo onPrev={prev} onNext={handleNextStep2} />}
-            {step === 3 && (
+            {registrationStep === 1 && <StepOne onNext={handleNextStep1} />}
+            {registrationStep === 2 && (
+                <StepTwo onPrev={prev} onNext={handleNextStep2} />
+            )}
+            {registrationStep === 3 && (
                 <StepThree
                     onPrev={prev}
                     onNext={handleSubmitAll}
-                    // Вариант: если submit отдельно, можно заменить на handleNextStep3
+                    isLoading={isLoading}
+                    error={error}
                 />
             )}
-            {step === 4 && <StepFour onBackToAddress={() => setStep(3)} />}
+            {registrationStep === 4 && (
+                <StepFour onBackToAddress={() => setStep(3)} />
+            )}
         </FormProvider>
     );
 };

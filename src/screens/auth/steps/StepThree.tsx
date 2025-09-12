@@ -17,9 +17,19 @@ import ApartmentField from "../../../components/forms/fields/ApartmentField";
 import { useDaDataCity } from "../../../hooks/useDaDataCity";
 import { useDaDataStreet } from "../../../hooks/useDaDataStreet";
 
-type Props = { onPrev: () => void; onNext: () => void };
+type Props = {
+    onPrev: () => void;
+    onNext: () => void;
+    isLoading?: boolean;
+    error?: string | null;
+};
 
-const StepThree: React.FC<Props> = ({ onPrev, onNext }) => {
+const StepThree: React.FC<Props> = ({
+    onPrev,
+    onNext,
+    isLoading = false,
+    error,
+}) => {
     const { getValues, setValue, trigger } = useFormContext();
 
     // Фокус
@@ -152,13 +162,35 @@ const StepThree: React.FC<Props> = ({ onPrev, onNext }) => {
                 />
             </View>
 
+            {/* Отображение ошибок */}
+            {error && (
+                <View
+                    style={{
+                        marginBottom: 16,
+                        padding: 12,
+                        backgroundColor: "rgba(255, 0, 0, 0.1)",
+                        borderRadius: 8,
+                    }}
+                >
+                    <Text style={{ color: COLORS.error, textAlign: "center" }}>
+                        {error}
+                    </Text>
+                </View>
+            )}
+
             <Button
                 gradientColors={GRADIENT_COLORS.primary}
                 textColor={COLORS.background}
                 onPress={handleNext}
-                disabled={submitting}
+                disabled={submitting || isLoading}
             >
-                <Text>{submitting ? "Проверка..." : "Далее"}</Text>
+                <Text>
+                    {isLoading
+                        ? "Регистрация..."
+                        : submitting
+                        ? "Проверка..."
+                        : "Завершить регистрацию"}
+                </Text>
             </Button>
         </StepContainer>
     );

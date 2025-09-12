@@ -19,7 +19,7 @@ export type RootStackParamList = {
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const AppNavigator: React.FC = () => {
-    const { isLoggedIn, isLoading } = useAuth();
+    const { isLoggedIn, isLoading, registrationCompleted } = useAuth();
 
     if (isLoading) {
         return <LoadingScreen />;
@@ -27,8 +27,10 @@ const AppNavigator: React.FC = () => {
 
     return (
         <Stack.Navigator screenOptions={{ headerShown: false }}>
-            {isLoggedIn ? (
+            {isLoggedIn && !registrationCompleted ? (
                 <Stack.Screen name="Main" component={MainNavigator} />
+            ) : registrationCompleted ? (
+                <Stack.Screen name="Register" component={RegisterScreen} />
             ) : (
                 <>
                     <Stack.Screen name="Welcome" component={WelcomeScreen} />

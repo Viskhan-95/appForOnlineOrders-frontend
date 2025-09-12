@@ -6,6 +6,7 @@ import { Provider as PaperProvider } from "react-native-paper";
 import { paperDarkTheme } from "./src/theme/paperTheme";
 import { Provider } from "react-redux";
 import { store } from "./src/store";
+import { AuthProvider } from "./src/providers/AuthProvider";
 
 export type RootStackParamList = {
     Welcome: undefined;
@@ -18,7 +19,7 @@ export type RootStackParamList = {
 export default function App() {
     return (
         <Provider store={store}>
-            <NavigationContainer>
+            <AuthProvider>
                 <NavigationContainer>
                     <SafeAreaProvider>
                         <PaperProvider theme={paperDarkTheme}>
@@ -27,7 +28,7 @@ export default function App() {
                         </PaperProvider>
                     </SafeAreaProvider>
                 </NavigationContainer>
-            </NavigationContainer>
+            </AuthProvider>
         </Provider>
     );
 }
