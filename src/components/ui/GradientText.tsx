@@ -12,8 +12,7 @@ type GradientTextProps = {
     gradientColors?: readonly string[];
     fontSize?: number;
     style?: any;
-    textAlign?: 'left' | 'center' | 'right' | 'justify' | 'auto';
-
+    textAlign?: "left" | "center" | "right" | "justify" | "auto";
 };
 
 const GradientText: React.FC<GradientTextProps> = ({
@@ -27,12 +26,14 @@ const GradientText: React.FC<GradientTextProps> = ({
         <MaskedView
             style={[styles.maskedView, style]}
             maskElement={
-                <Text style={[styles.text, { fontSize, textAlign }]}>{children}</Text>
+                <Text style={[styles.text, { fontSize, textAlign }]}>
+                    {children}
+                </Text>
             }
         >
             <LinearGradient
                 colors={gradientColors as [string, string, ...string[]]}
-                start={{ x: 0, y: 0 }}
+                start={{ x: 0, y: 1 }}
                 end={{ x: 1, y: 0 }}
                 style={styles.gradient}
             />
@@ -49,11 +50,11 @@ const styles = StyleSheet.create({
         fontFamily: TYPOGRAPHY.regular,
         backgroundColor: "transparent",
         color: "black",
-        fontWeight: "bold"
+        fontWeight: "bold",
     },
     gradient: {
         flex: 1,
-        height: rh(4),
+        // height: rh(4),
     },
 });
 

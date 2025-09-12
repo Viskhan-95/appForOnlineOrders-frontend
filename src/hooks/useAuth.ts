@@ -6,6 +6,7 @@ import {
     registerUser,
     registerStart,
     registerVerify,
+    resendVerificationCode,
     logoutUser,
     refreshToken,
     getMe,
@@ -14,7 +15,9 @@ import {
     clearAuth,
     clearRegistrationCompleted,
     setRegistrationStep,
-    resetRegistrationStep,
+    resetRegistration,
+    setForgotPassword,
+    resetForgotPassword,
     requestPasswordReset,
     verifyResetCode,
     confirmPasswordReset,
@@ -24,6 +27,7 @@ import {
     RegisterRequest,
     RegisterStartRequest,
     RegisterVerifyRequest,
+    ResendCodeRequest,
     ResetPasswordRequest,
     ResetVerifyRequest,
     ResetConfirmRequest,
@@ -32,6 +36,17 @@ import {
 export const useAuth = () => {
     const dispatch = useAppDispatch();
     const authState = useAppSelector((state) => state.auth);
+
+    const {
+        user,
+        tokens,
+        isAuthenticated,
+        isLoading,
+        error,
+        registrationCompleted,
+        registration,
+        forgotPassword,
+    } = authState;
 
     // Основные методы аутентификации
     const login = useCallback(
@@ -63,6 +78,13 @@ export const useAuth = () => {
     const verifyRegistration = useCallback(
         (data: RegisterVerifyRequest) => {
             return dispatch(registerVerify(data));
+        },
+        [dispatch]
+    );
+
+    const resendVerificationCodeAction = useCallback(
+        (data: ResendCodeRequest) => {
+            return dispatch(resendVerificationCode(data));
         },
         [dispatch]
     );
@@ -123,7 +145,19 @@ export const useAuth = () => {
     );
 
     const resetStep = useCallback(() => {
-        dispatch(resetRegistrationStep());
+        dispatch(resetRegistration());
+    }, [dispatch]);
+
+    // Управление шагами восстановления пароля
+    const setForgotPasswordAction = useCallback(
+        (step: number) => {
+            dispatch(setForgotPassword(step));
+        },
+        [dispatch]
+    );
+
+    const resetForgotPassword = useCallback(() => {
+        dispatch(resetForgotPassword());
     }, [dispatch]);
 
     const clearStorage = useCallback(async () => {
@@ -173,6 +207,7 @@ export const useAuth = () => {
         // Пошаговая регистрация
         startRegistration,
         verifyRegistration,
+        resendVerificationCode: resendVerificationCodeAction,
 
         // Сброс пароля
         requestPasswordReset: requestPasswordResetAction,
@@ -190,6 +225,8 @@ export const useAuth = () => {
         clearRegistrationCompletedFlag,
         setStep,
         resetStep,
+        setForgotPassword: setForgotPasswordAction,
+        resetForgotPassword,
         clearStorage,
 
         // Проверки ролей

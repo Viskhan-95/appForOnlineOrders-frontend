@@ -56,6 +56,11 @@ export interface RegisterVerifyRequest {
     role?: "SUPERADMIN" | "ADMIN" | "USER";
 }
 
+// Для повторной отправки кода
+export interface ResendCodeRequest {
+    email: string;
+}
+
 // Сброс пароля
 export interface ResetPasswordRequest {
     email: string;
@@ -67,8 +72,9 @@ export interface ResetVerifyRequest {
 }
 
 export interface ResetConfirmRequest {
-    resetToken: string;
-    newPassword: string;
+    email: string;
+    code: string;
+    password: string;
 }
 
 // Состояние аутентификации в Redux
@@ -80,6 +86,7 @@ export interface AuthState {
     error: string | null;
     registrationCompleted: boolean;
     registrationStep: number;
+    forgotPassword: number;
 }
 
 // Ответы API с сообщениями

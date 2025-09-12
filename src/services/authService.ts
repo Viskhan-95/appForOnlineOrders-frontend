@@ -5,6 +5,7 @@ import {
     RegisterRequest,
     RegisterStartRequest,
     RegisterVerifyRequest,
+    ResendCodeRequest,
     ResetPasswordRequest,
     ResetVerifyRequest,
     ResetConfirmRequest,
@@ -42,6 +43,13 @@ class AuthService {
             "/auth/register-verify",
             data
         );
+        return response.data;
+    }
+
+    async resendVerificationCode(
+        data: ResendCodeRequest
+    ): Promise<ApiMessageResponse> {
+        const response = await baseApiClient.post("/auth/resend-code", data);
         return response.data;
     }
 

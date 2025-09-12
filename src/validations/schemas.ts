@@ -41,12 +41,56 @@ export const registerSchema = z.object({
     apartment: z.string().optional(),
 
     role: z.string().optional(),
+
+    // Код подтверждения для StepFour
+    verificationCode: z
+        .string()
+        .min(1, "Код подтверждения обязателен")
+        .regex(/^\d{6}$/, "Код должен содержать 6 цифр"),
 });
 
 // Схема для входа
 export const loginSchema = baseLoginSchema;
 
-// Схема для восстановления пароля
+// Схемы для восстановления пароля по шагам
+export const forgotPasswordStep1 = z.object({
+    email: emailSchema.toLowerCase(),
+});
+
+export const forgotPasswordStep2 = z.object({
+    email: emailSchema.toLowerCase(),
+    code: z
+        .string()
+        .min(1, "Код подтверждения обязателен")
+        .regex(/^\d{6}$/, "Код должен содержать 6 цифр"),
+});
+
+export const forgotPasswordStep3 = z.object({
+    email: emailSchema.toLowerCase(),
+    code: z
+        .string()
+        .min(1, "Код подтверждения обязателен")
+        .regex(/^\d{6}$/, "Код должен содержать 6 цифр"),
+    password: passwordSchema.regex(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
+        "Пароль должен содержать хотя бы одну строчную букву, одну заглавную букву и одну цифру"
+    ),
+});
+
+// Полная схема для восстановления пароля
+export const forgotPassword = z.object({
+    email: emailSchema.toLowerCase(),
+    code: z
+        .string()
+        .min(1, "Код подтверждения обязателен")
+        .regex(/^\d{6}$/, "Код должен содержать 6 цифр"),
+    password: passwordSchema.regex(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
+        "Пароль должен содержать хотя бы одну строчную букву, одну заглавную букву и одну цифру"
+    ),
+});
+
+// Старая схема для совместимости
 export const forgotPasswordSchema = baseForgotPasswordSchema;
 
 // Схема для сброса пароля
@@ -70,5 +114,8 @@ export const resetPasswordSchema = z
 // Типы для TypeScript
 export type RegisterFormData = z.infer<typeof registerSchema>;
 export type LoginFormData = z.infer<typeof loginSchema>;
-export type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
+export type ForgotPasswordFormData = z.infer<typeof forgotPassword>;
+export type ForgotPasswordStep1FormData = z.infer<typeof forgotPasswordStep1>;
+export type ForgotPasswordStep2FormData = z.infer<typeof forgotPasswordStep2>;
+export type ForgotPasswordStep3FormData = z.infer<typeof forgotPasswordStep3>;
 export type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>;

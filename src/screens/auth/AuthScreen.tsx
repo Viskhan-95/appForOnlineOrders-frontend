@@ -85,32 +85,11 @@ const AuthScreen: React.FC = () => {
                     </View>
 
                     <View style={styles.formContainer}>
-                        {/* Отображение ошибок */}
-                        {error && (
-                            <View
-                                style={{
-                                    marginBottom: 16,
-                                    padding: 12,
-                                    backgroundColor: "rgba(255, 0, 0, 0.1)",
-                                    borderRadius: 8,
-                                }}
-                            >
-                                <Text
-                                    style={{
-                                        color: COLORS.error,
-                                        textAlign: "center",
-                                    }}
-                                >
-                                    {error}
-                                </Text>
-                            </View>
-                        )}
-
                         <Controller
                             control={control}
                             name="email"
                             render={({ field: { value, onChange } }) => (
-                                <View>
+                                <View style={{ marginBottom: rh(3) }}>
                                     <FormInput
                                         icon={require("../../assets/icons/email.png")}
                                         placeholder="Email"
@@ -130,11 +109,11 @@ const AuthScreen: React.FC = () => {
                             control={control}
                             name="password"
                             render={({ field: { value, onChange } }) => (
-                                <View>
+                                <View style={{ marginBottom: rh(2) }}>
                                     <FormInput
                                         iconPassword={require("../../assets/icons/password.png")}
-                                        iconEyeOff={require("../../assets/icons/eye-off.png")}
-                                        iconEye={require("../../assets/icons/eye.png")}
+                                        iconEyeOff={require("../../assets/icons/eye-closed.png")}
+                                        iconEye={require("../../assets/icons/eye-open.png")}
                                         placeholder="Пароль"
                                         value={value}
                                         onChangeText={onChange}
@@ -152,9 +131,9 @@ const AuthScreen: React.FC = () => {
                                 </View>
                             )}
                         />
-
+                    </View>
+                    <View style={styles.buttonContainer}>
                         <TouchableOpacity
-                            style={styles.forgotPassword}
                             onPress={() =>
                                 navigation.navigate("ForgotPassword")
                             }

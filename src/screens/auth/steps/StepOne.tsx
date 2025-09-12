@@ -59,15 +59,15 @@ const StepOne: React.FC<Props> = ({ onNext }) => {
                 />
 
                 <Controller
-                    // control={control}
+                    control={control}
                     name="password"
                     rules={{ required: true, minLength: 6 }}
                     render={({ field: { value, onChange } }) => (
                         <View style={styles.marginBottom}>
                             <FormInput
                                 iconPassword={require("../../../assets/icons/password.png")}
-                                iconEyeOff={require("../../../assets/icons/eye-off.png")}
-                                iconEye={require("../../../assets/icons/eye.png")}
+                                iconEyeOff={require("../../../assets/icons/eye-closed.png")}
+                                iconEye={require("../../../assets/icons/eye-open.png")}
                                 placeholder="Пароль"
                                 value={value}
                                 onChangeText={onChange}
@@ -85,7 +85,7 @@ const StepOne: React.FC<Props> = ({ onNext }) => {
                 />
 
                 <Controller
-                    // control={control}
+                    control={control}
                     name="phone"
                     rules={{ required: true, minLength: 10 }}
                     render={({ field: { value, onChange } }) => (

@@ -7,6 +7,7 @@ import { paperDarkTheme } from "./src/theme/paperTheme";
 import { Provider } from "react-redux";
 import { store } from "./src/store";
 import { AuthProvider } from "./src/providers/AuthProvider";
+import { ModalProvider } from "./src/contexts/ModalContext";
 
 export type RootStackParamList = {
     Welcome: undefined;
@@ -20,14 +21,16 @@ export default function App() {
     return (
         <Provider store={store}>
             <AuthProvider>
-                <NavigationContainer>
-                    <SafeAreaProvider>
-                        <PaperProvider theme={paperDarkTheme}>
-                            <DarkStatusBar />
-                            <AppNavigator />
-                        </PaperProvider>
-                    </SafeAreaProvider>
-                </NavigationContainer>
+                <ModalProvider>
+                    <NavigationContainer>
+                        <SafeAreaProvider>
+                            <PaperProvider theme={paperDarkTheme}>
+                                <DarkStatusBar />
+                                <AppNavigator />
+                            </PaperProvider>
+                        </SafeAreaProvider>
+                    </NavigationContainer>
+                </ModalProvider>
             </AuthProvider>
         </Provider>
     );

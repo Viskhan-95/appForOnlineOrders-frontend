@@ -60,4 +60,32 @@ export const styles = StyleSheet.create({
         width: "100%",
         alignSelf: "flex-start",
     },
+    // Стили для StepFour (код подтверждения)
+    resendContainer: {
+        alignItems: "center",
+        marginTop: rh(2),
+    },
+    countdownText: {
+        color: COLORS.textSecondary,
+        fontSize: SIZES.fontSize.sm,
+        textAlign: "center",
+    },
+    resendButton: {
+        paddingVertical: rh(1),
+        paddingHorizontal: rw(4),
+    },
+    resendText: {
+        color: COLORS.primary,
+        fontSize: SIZES.fontSize.sm,
+        textAlign: "center",
+        textDecorationLine: "underline",
+    },
+    resendTextDisabled: {
+        color: COLORS.textSecondary,
+        textDecorationLine: "none",
+    },
+    successIcon: {
+        width: rw(5),
+        height: rh(2.5),
+    },
 });

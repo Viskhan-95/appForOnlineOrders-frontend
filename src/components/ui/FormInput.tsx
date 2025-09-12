@@ -22,10 +22,14 @@ type FormInputProps = {
     iconPassword?: ImageSourcePropType;
     iconEyeOff?: ImageSourcePropType;
     iconEye?: ImageSourcePropType;
+    rightIcon?: ImageSourcePropType;
+    rightComponent?: React.ReactNode;
     onChangeText: (text: string) => void;
     onTogglePassword?: () => void;
     isPasswordVisible?: boolean;
     keyboardType?: KeyboardTypeOptions;
+    maxLength?: number;
+    autoFocus?: boolean;
     onFocus?: () => void;
     onBlur?: () => void;
     editable?: boolean;
@@ -67,6 +71,8 @@ const FormInput: React.FC<FormInputProps> = ({
     iconPassword,
     iconEyeOff,
     iconEye,
+    rightIcon,
+    rightComponent,
     onChangeText,
     onTogglePassword,
     isPasswordVisible,
@@ -74,6 +80,8 @@ const FormInput: React.FC<FormInputProps> = ({
     onBlur,
     editable,
     keyboardType,
+    maxLength,
+    autoFocus,
     inputMode,
     autoComplete,
     textContentType,
@@ -113,6 +121,8 @@ const FormInput: React.FC<FormInputProps> = ({
                     onBlur={handleBlur}
                     editable={editable}
                     keyboardType={keyboardType}
+                    maxLength={maxLength}
+                    autoFocus={autoFocus}
                     inputMode={inputMode}
                     autoComplete={autoComplete as any}
                     textContentType={textContentType as any}
@@ -124,6 +134,14 @@ const FormInput: React.FC<FormInputProps> = ({
                 <TouchableOpacity onPress={onTogglePassword}>
                     <Image source={isPasswordVisible ? iconEye : iconEyeOff} />
                 </TouchableOpacity>
+            )}
+            {rightIcon && (
+                <View style={styles.rightIconContainer}>
+                    <Image source={rightIcon} style={styles.rightIcon} />
+                </View>
+            )}
+            {rightComponent && (
+                <View style={styles.rightIconContainer}>{rightComponent}</View>
             )}
         </View>
     );
@@ -161,5 +179,15 @@ const styles = StyleSheet.create({
         color: COLORS.textSecondary,
         fontFamily: TYPOGRAPHY.regular,
         fontSize: SIZES.fontSize.sm,
+    },
+    rightIconContainer: {
+        marginLeft: rw(2),
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    rightIcon: {
+        width: 20,
+        height: 20,
+        tintColor: COLORS.primary,
     },
 });

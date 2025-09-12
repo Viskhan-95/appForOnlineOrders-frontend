@@ -1,14 +1,14 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
 import LottieView from "lottie-react-native";
-import { COLORS, GRADIENT_COLORS } from "../utils/constans/colors";
-import { rh, rw } from "../utils/responsive";
+import { COLORS } from "../../utils/constans/colors";
+import { rh, rw } from "../../utils/responsive";
 
-const LoadingScreen: React.FC = () => {
+const NotFoundScreen: React.FC = () => {
     return (
         <View style={styles.container}>
             <LottieView
-                source={require("../assets/animations/pizza.json")}
+                source={require("../assets/animations/notFound.json")}
                 autoPlay
                 loop
                 style={styles.lottie}
@@ -17,7 +17,7 @@ const LoadingScreen: React.FC = () => {
     );
 };
 
-export default LoadingScreen;
+export default NotFoundScreen;
 
 const styles = StyleSheet.create({
     container: {

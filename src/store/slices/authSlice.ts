@@ -10,6 +10,7 @@ import {
     ResetPasswordRequest,
     ResetVerifyRequest,
     ResetConfirmRequest,
+    ResendCodeRequest,
 } from "../../types/auth";
 import authService from "../../services/authService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -28,6 +29,7 @@ const initialState: AuthState = {
     error: null,
     registrationCompleted: false,
     registrationStep: 1,
+    forgotPassword: 1,
 };
 
 // Async Thunks - асинхронные действия
@@ -111,6 +113,22 @@ export const registerVerify = createAsyncThunk(
         } catch (error: any) {
             return rejectWithValue(
                 error.response?.data?.message || "Ошибка верификации"
+            );
+        }
+    }
+);
+
+// Повторная отправка кода подтверждения
+export const resendVerificationCode = createAsyncThunk(
+    "auth/resendVerificationCode",
+    async (data: ResendCodeRequest, { rejectWithValue }) => {
+        try {
+            const response = await authService.resendVerificationCode(data);
+            return response;
+        } catch (error: any) {
+            return rejectWithValue(
+                error.response?.data?.message ||
+                    "Ошибка повторной отправки кода"
             );
         }
     }
@@ -289,13 +307,23 @@ const authSlice = createSlice({
         },
 
         // Управление шагами регистрации
-        setRegistrationStep: (state, action) => {
+        setRegistrationStep: (state, action: PayloadAction<number>) => {
             state.registrationStep = action.payload;
         },
 
         // Сброс шага регистрации
         resetRegistrationStep: (state) => {
             state.registrationStep = 1;
+        },
+
+        // Управление шагами восстановления пароля
+        setForgotPassword: (state, action: PayloadAction<number>) => {
+            state.forgotPassword = action.payload;
+        },
+
+        // Сброс шага восстановления пароля
+        resetForgotPassword: (state) => {
+            state.forgotPassword = 1;
         },
     },
     extraReducers: (builder) => {
@@ -337,6 +365,55 @@ const authSlice = createSlice({
                 state.error = null;
             })
             .addCase(registerUser.rejected, (state, action) => {
+                state.isLoading = false;
+                state.error = action.payload as string;
+            })
+
+            // Register Start
+            .addCase(registerStart.pending, (state) => {
+                state.isLoading = true;
+                state.error = null;
+            })
+            .addCase(registerStart.fulfilled, (state) => {
+                state.isLoading = false;
+                state.error = null;
+            })
+            .addCase(registerStart.rejected, (state, action) => {
+                state.isLoading = false;
+                state.error = action.payload as string;
+            })
+
+            // Register Verify
+            .addCase(registerVerify.pending, (state) => {
+                state.isLoading = true;
+                state.error = null;
+            })
+            .addCase(registerVerify.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.user = action.payload.user;
+                state.tokens = {
+                    accessToken: action.payload.accessToken,
+                    refreshToken: action.payload.refreshToken,
+                };
+                state.isAuthenticated = true;
+                state.registrationCompleted = true;
+                state.error = null;
+            })
+            .addCase(registerVerify.rejected, (state, action) => {
+                state.isLoading = false;
+                state.error = action.payload as string;
+            })
+
+            // Resend Verification Code
+            .addCase(resendVerificationCode.pending, (state) => {
+                state.isLoading = true;
+                state.error = null;
+            })
+            .addCase(resendVerificationCode.fulfilled, (state) => {
+                state.isLoading = false;
+                state.error = null;
+            })
+            .addCase(resendVerificationCode.rejected, (state, action) => {
                 state.isLoading = false;
                 state.error = action.payload as string;
             })
@@ -416,5 +493,7 @@ export const {
     clearRegistrationCompleted,
     setRegistrationStep,
     resetRegistrationStep,
+    setForgotPassword,
+    resetForgotPassword,
 } = authSlice.actions;
 export default authSlice.reducer;
