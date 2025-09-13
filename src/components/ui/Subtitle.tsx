@@ -1,8 +1,8 @@
 import React from "react";
 import { StyleSheet, Text } from "react-native";
-import { COLORS } from "../../utils/constans/colors";
-import { TYPOGRAPHY } from "../../utils/constans/typography";
-import { SIZES } from "../../utils/constans/sizes";
+import { COLORS } from "../../utils/constants/colors";
+import { TYPOGRAPHY } from "../../utils/constants/typography";
+import { SIZES } from "../../utils/constants/sizes";
 import { rh } from "../../utils/responsive";
 
 type SubtitleProps = {

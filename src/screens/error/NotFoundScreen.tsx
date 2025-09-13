@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
 import LottieView from "lottie-react-native";
-import { COLORS } from "../../utils/constans/colors";
+import { COLORS } from "../../utils/constants/colors";
 import { rh, rw } from "../../utils/responsive";
 
 const NotFoundScreen: React.FC = () => {

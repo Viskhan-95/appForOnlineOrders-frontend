@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { RegisterFormData, registerSchema } from "../../validations";
 import { useAuth } from "../../hooks/useAuth";
 import { useAppNavigation } from "../../hooks/useAppNavigation";
+import useBackendErrorHandler from "../../hooks/useBackendErrorHandler";
 import { RegisterRequest } from "../../types/auth";
 import StepOne from "./steps/StepOne";
 import StepTwo from "./steps/StepTwo";
@@ -23,6 +24,27 @@ const RegisterScreen: React.FC = () => {
         setStep,
     } = useAuth();
     const navigation = useAppNavigation();
+    const { handleRegistrationError } = useBackendErrorHandler();
+
+    // Обработка ошибки регистрации с возможностью перехода к восстановлению пароля
+    const handleRegistrationErrorWithNavigation = (error: any) => {
+        const { message, code, statusCode } = error;
+
+        // Если email уже существует, показываем модалку с возможностью восстановления пароля
+        if (
+            statusCode === 409 ||
+            code === "EMAIL_EXISTS" ||
+            message.includes("уже существует") ||
+            message.includes("already exists")
+        ) {
+            // Здесь можно добавить логику для показа модалки с кнопкой "Восстановить пароль"
+            // которая будет переводить на экран ForgotPassword
+            handleRegistrationError(error);
+            // navigation.navigate('ForgotPassword');
+        } else {
+            handleRegistrationError(error);
+        }
+    };
 
     const methods = useForm<RegisterFormData>({
         mode: "onChange",
@@ -80,7 +102,8 @@ const RegisterScreen: React.FC = () => {
                 next(); // Переходим к StepFour для ввода кода
             } catch (err) {
                 console.log("Ошибка отправки кода:", err);
-                // Ошибка уже обработана в Redux
+                // Обрабатываем ошибку регистрации с показом соответствующей модалки
+                handleRegistrationErrorWithNavigation(err);
             }
         }
     };
@@ -113,8 +136,9 @@ const RegisterScreen: React.FC = () => {
             console.log("Верификация кода успешна:", result);
         } catch (error) {
             console.log("Ошибка верификации кода в RegisterScreen:", error);
-            // Пробрасываем ошибку в StepFour для обработки
-            throw error;
+            // Обрабатываем ошибку регистрации с показом соответствующей модалки
+            handleRegistrationErrorWithNavigation(error);
+            throw error; // Пробрасываем для StepFour
         }
     };
 

@@ -7,8 +7,8 @@ import {
     Dimensions,
     StatusBar,
 } from "react-native";
-import { COLORS } from "../../utils/constans/colors";
-import { SIZES } from "../../utils/constans/sizes";
+import { COLORS } from "../../utils/constants/colors";
+import { SIZES } from "../../utils/constants/sizes";
 import { rw, rh } from "../../utils/responsive";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");

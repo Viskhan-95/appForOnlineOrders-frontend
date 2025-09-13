@@ -3,9 +3,9 @@ import { styles } from "./styles";
 import StepContainer from "./StepContainer";
 import Subtitle from "../../../components/ui/Subtitle";
 import Button from "../../../components/ui/Button";
-import { COLORS, GRADIENT_COLORS } from "../../../utils/constans/colors";
+import { COLORS, GRADIENT_COLORS } from "../../../utils/constants/colors";
 import GradientText from "../../../components/ui/GradientText";
-import { SIZES } from "../../../utils/constans/sizes";
+import { SIZES } from "../../../utils/constants/sizes";
 import React, { useEffect } from "react";
 import { useAuth } from "../../../hooks/useAuth";
 

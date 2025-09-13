@@ -6,7 +6,7 @@ import Title from "../../../components/ui/Title";
 import Subtitle from "../../../components/ui/Subtitle";
 import FormInput from "../../../components/ui/FormInput";
 import ArrowBack from "../../../components/ui/ArrowBack";
-import { COLORS, GRADIENT_COLORS } from "../../../utils/constans/colors";
+import { COLORS, GRADIENT_COLORS } from "../../../utils/constants/colors";
 import Button from "../../../components/ui/Button";
 import { Controller, useFormContext } from "react-hook-form";
 

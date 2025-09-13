@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { useAuth } from "../../hooks/useAuth";
 import WelcomeAnimatedScreen from "./WelcomeAnimatedScreen";
+import { COLORS } from "../../utils/constants/colors";
+import { SIZES } from "../../utils/constants/sizes";
+import { rw, rh } from "../../utils/responsive";
 
 const HomeScreen: React.FC = () => {
     const { user, logout } = useAuth();
@@ -35,7 +38,9 @@ const HomeScreen: React.FC = () => {
     }, []);
 
     if (isAppLoading) {
-        return <WelcomeAnimatedScreen onLoadingComplete={handleLoadingComplete} />;
+        return (
+            <WelcomeAnimatedScreen onLoadingComplete={handleLoadingComplete} />
+        );
     }
 
     return (
@@ -64,33 +69,33 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        padding: 20,
-        backgroundColor: "#111015",
+        padding: SIZES.padding.xl,
+        backgroundColor: COLORS.background,
     },
     title: {
-        fontSize: 24,
+        fontSize: SIZES.fontSize.xxl,
         fontWeight: "bold",
-        color: "#FFFFFF",
-        marginBottom: 30,
+        color: COLORS.text,
+        marginBottom: SIZES.margin.xl,
     },
     userInfo: {
-        marginBottom: 30,
+        marginBottom: SIZES.margin.xl,
         alignItems: "center",
     },
     label: {
-        fontSize: 16,
-        color: "#FFFFFF",
-        marginBottom: 10,
+        fontSize: SIZES.fontSize.md,
+        color: COLORS.text,
+        marginBottom: SIZES.margin.sm,
     },
     logoutButton: {
-        backgroundColor: "#FF0000",
-        paddingHorizontal: 30,
-        paddingVertical: 15,
-        borderRadius: 8,
+        backgroundColor: COLORS.error,
+        paddingHorizontal: SIZES.padding.xl,
+        paddingVertical: SIZES.padding.md,
+        borderRadius: SIZES.borderRadius.medium,
     },
     logoutText: {
-        color: "#FFFFFF",
-        fontSize: 16,
+        color: COLORS.text,
+        fontSize: SIZES.fontSize.md,
         fontWeight: "bold",
     },
 });

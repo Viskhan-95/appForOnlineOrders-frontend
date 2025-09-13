@@ -2,9 +2,9 @@ import React from "react";
 import { Text, StyleSheet } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
-import { GRADIENT_COLORS } from "../../utils/constans/colors";
-import { TYPOGRAPHY } from "../../utils/constans/typography";
-import { SIZES } from "../../utils/constans/sizes";
+import { GRADIENT_COLORS } from "../../utils/constants/colors";
+import { TYPOGRAPHY } from "../../utils/constants/typography";
+import { SIZES } from "../../utils/constants/sizes";
 import { rh } from "../../utils/responsive";
 
 type GradientTextProps = {

@@ -1,7 +1,7 @@
 import { useFormContext, Controller } from "react-hook-form";
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
-import { COLORS, GRADIENT_COLORS } from "../../../utils/constans/colors";
+import { COLORS, GRADIENT_COLORS } from "../../../utils/constants/colors";
 import Header from "../../../components/ui/Header";
 import Title from "../../../components/ui/Title";
 import Subtitle from "../../../components/ui/Subtitle";

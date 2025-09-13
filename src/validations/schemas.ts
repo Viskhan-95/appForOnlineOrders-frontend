@@ -93,23 +93,8 @@ export const forgotPassword = z.object({
 // Старая схема для совместимости
 export const forgotPasswordSchema = baseForgotPasswordSchema;
 
-// Схема для сброса пароля
-export const resetPasswordSchema = z
-    .object({
-        password: z
-            .string()
-            .min(6, "Пароль должен содержать минимум 6 символов")
-            .regex(
-                /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-                "Пароль должен содержать хотя бы одну строчную букву, одну заглавную букву и одну цифру"
-            ),
-
-        confirmPassword: z.string().min(1, "Подтвердите пароль"),
-    })
-    .refine((data) => data.password === data.confirmPassword, {
-        message: "Пароли не совпадают",
-        path: ["confirmPassword"],
-    });
+// Импортируем схему сброса пароля из базовых схем
+export { resetPasswordSchema } from "./baseSchemas";
 
 // Типы для TypeScript
 export type RegisterFormData = z.infer<typeof registerSchema>;

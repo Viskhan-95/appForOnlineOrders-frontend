@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import Header from "../../components/ui/Header";
 import Button from "../../components/ui/Button";
-import { COLORS, GRADIENT_COLORS } from "../../utils/constans/colors";
+import { COLORS, GRADIENT_COLORS } from "../../utils/constants/colors";
 import { rw, rh } from "../../utils/responsive";
 import Title from "../../components/ui/Title";
 import { useAppNavigation } from "../../hooks/useAppNavigation";

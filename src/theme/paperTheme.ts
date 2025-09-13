@@ -3,7 +3,7 @@ import {
     configureFonts,
     MD3Typescale,
 } from "react-native-paper";
-import { COLORS } from "../utils/constans/colors";
+import { COLORS } from "../utils/constants/colors";
 
 const fonts: Partial<MD3Typescale> = {};
 
@@ -24,6 +24,7 @@ export const paperDarkTheme = {
     },
     fonts: configureFonts({ config: fonts }),
 };
+
 
 
 

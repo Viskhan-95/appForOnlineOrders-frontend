@@ -6,7 +6,7 @@ import { Text, StyleSheet, View } from "react-native";
 import Title from "../../../components/ui/Title";
 import Subtitle from "../../../components/ui/Subtitle";
 import Button from "../../../components/ui/Button";
-import { COLORS, GRADIENT_COLORS } from "../../../utils/constans/colors";
+import { COLORS, GRADIENT_COLORS } from "../../../utils/constants/colors";
 import { rh, rw } from "../../../utils/responsive";
 import { CityOption } from "../../../services/dadata";
 import { useFormContext, useWatch } from "react-hook-form";

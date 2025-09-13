@@ -31,11 +31,23 @@ export const loginSchema = z.object({
     password: passwordSchema,
 });
 
+// Схема для сброса пароля (только email)
 export const forgotPasswordSchema = z.object({
     email: emailSchema,
-    password: passwordSchema,
 });
+
+// Схема для сброса пароля с новым паролем
+export const resetPasswordSchema = z
+    .object({
+        password: passwordSchema,
+        confirmPassword: z.string().min(1, "Подтвердите пароль"),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+        message: "Пароли не совпадают",
+        path: ["confirmPassword"],
+    });
 
 // Типы для TypeScript
 export type LoginFormData = z.infer<typeof loginSchema>;
 export type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
+export type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>;

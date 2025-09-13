@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "../store";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
@@ -15,7 +15,7 @@ import {
     clearAuth,
     clearRegistrationCompleted,
     setRegistrationStep,
-    resetRegistration,
+    resetRegistrationStep,
     setForgotPassword,
     resetForgotPassword,
     requestPasswordReset,
@@ -35,18 +35,22 @@ import {
 
 export const useAuth = () => {
     const dispatch = useAppDispatch();
-    const authState = useAppSelector((state) => state.auth);
 
-    const {
-        user,
-        tokens,
-        isAuthenticated,
-        isLoading,
-        error,
-        registrationCompleted,
-        registration,
-        forgotPassword,
-    } = authState;
+    // Мемоизированные селекторы для оптимизации производительности
+    const user = useAppSelector((state) => state.auth.user);
+    const tokens = useAppSelector((state) => state.auth.tokens);
+    const isAuthenticated = useAppSelector(
+        (state) => state.auth.isAuthenticated
+    );
+    const isLoading = useAppSelector((state) => state.auth.isLoading);
+    const error = useAppSelector((state) => state.auth.error);
+    const registrationCompleted = useAppSelector(
+        (state) => state.auth.registrationCompleted
+    );
+    const registrationStep = useAppSelector(
+        (state) => state.auth.registrationStep
+    );
+    const forgotPassword = useAppSelector((state) => state.auth.forgotPassword);
 
     // Основные методы аутентификации
     const login = useCallback(
@@ -120,8 +124,13 @@ export const useAuth = () => {
         return dispatch(getMe());
     }, [dispatch]);
 
-    const restoreAuthSession = useCallback(() => {
-        return dispatch(restoreSession());
+    const restoreAuthSession = useCallback(async () => {
+        try {
+            return await dispatch(restoreSession());
+        } catch (error) {
+            console.error("Ошибка восстановления сессии:", error);
+            throw error;
+        }
     }, [dispatch]);
 
     // Утилиты
@@ -145,7 +154,7 @@ export const useAuth = () => {
     );
 
     const resetStep = useCallback(() => {
-        dispatch(resetRegistration());
+        dispatch(resetRegistrationStep());
     }, [dispatch]);
 
     // Управление шагами восстановления пароля
@@ -172,70 +181,130 @@ export const useAuth = () => {
         }
     }, []);
 
-    // Вычисляемые значения
-    const isLoggedIn = authState.isAuthenticated && authState.user !== null;
-    const hasTokens = authState.tokens !== null;
-    const canRefresh = hasTokens && authState.tokens?.refreshToken;
-
-    // Проверки ролей
-    const hasRole = useCallback(
-        (role: "SUPERADMIN" | "ADMIN" | "USER") => {
-            return authState.user?.role === role;
-        },
-        [authState.user]
+    // Мемоизированные вычисляемые значения
+    const isLoggedIn = useMemo(
+        () => isAuthenticated && user !== null,
+        [isAuthenticated, user]
     );
 
-    const isAdmin = hasRole("ADMIN") || hasRole("SUPERADMIN");
-    const isSuperAdmin = hasRole("SUPERADMIN");
+    const hasTokens = useMemo(() => tokens !== null, [tokens]);
 
-    // 🔒 Проверки доступа
-    const canAccessAdmin = isAdmin;
-    const canAccessSuperAdmin = isSuperAdmin;
+    const canRefresh = useMemo(
+        () => hasTokens && tokens?.refreshToken,
+        [hasTokens, tokens?.refreshToken]
+    );
 
-    return {
-        // Состояние
-        ...authState,
-        isLoggedIn,
-        hasTokens,
-        canRefresh,
+    // Мемоизированные проверки ролей
+    const hasRole = useCallback(
+        (role: "SUPERADMIN" | "ADMIN" | "USER") => {
+            return user?.role === role;
+        },
+        [user?.role]
+    );
 
-        // Методы аутентификации
-        login,
-        register,
-        logout,
+    const isAdmin = useMemo(
+        () => hasRole("ADMIN") || hasRole("SUPERADMIN"),
+        [hasRole]
+    );
 
-        // Пошаговая регистрация
-        startRegistration,
-        verifyRegistration,
-        resendVerificationCode: resendVerificationCodeAction,
+    const isSuperAdmin = useMemo(() => hasRole("SUPERADMIN"), [hasRole]);
 
-        // Сброс пароля
-        requestPasswordReset: requestPasswordResetAction,
-        verifyResetCode: verifyResetCodeAction,
-        confirmPasswordReset: confirmPasswordResetAction,
+    // Мемоизированные проверки доступа
+    const canAccessAdmin = useMemo(() => isAdmin, [isAdmin]);
+    const canAccessSuperAdmin = useMemo(() => isSuperAdmin, [isSuperAdmin]);
 
-        // Управление токенами
-        refreshAuthToken,
-        fetchUserData,
-        restoreAuthSession,
+    // Мемоизированный возвращаемый объект
+    return useMemo(
+        () => ({
+            // Состояние
+            user,
+            tokens,
+            isAuthenticated,
+            isLoading,
+            error,
+            registrationCompleted,
+            registrationStep,
+            forgotPassword,
+            isLoggedIn,
+            hasTokens,
+            canRefresh,
 
-        // Утилиты
-        clearAuthError,
-        clearAuthState,
-        clearRegistrationCompletedFlag,
-        setStep,
-        resetStep,
-        setForgotPassword: setForgotPasswordAction,
-        resetForgotPassword,
-        clearStorage,
+            // Методы аутентификации
+            login,
+            register,
+            logout,
 
-        // Проверки ролей
-        hasRole,
-        isAdmin,
-        isSuperAdmin,
-        canAccessAdmin,
-        canAccessSuperAdmin,
-    };
+            // Пошаговая регистрация
+            startRegistration,
+            verifyRegistration,
+            resendVerificationCode: resendVerificationCodeAction,
+
+            // Сброс пароля
+            requestPasswordReset: requestPasswordResetAction,
+            verifyResetCode: verifyResetCodeAction,
+            confirmPasswordReset: confirmPasswordResetAction,
+
+            // Управление токенами
+            refreshAuthToken,
+            fetchUserData,
+            restoreAuthSession,
+
+            // Утилиты
+            clearAuthError,
+            clearAuthState,
+            clearRegistrationCompletedFlag,
+            setStep,
+            resetStep,
+            setForgotPassword: setForgotPasswordAction,
+            resetForgotPassword,
+            clearStorage,
+
+            // Проверки ролей
+            hasRole,
+            isAdmin,
+            isSuperAdmin,
+            canAccessAdmin,
+            canAccessSuperAdmin,
+        }),
+        [
+            user,
+            tokens,
+            isAuthenticated,
+            isLoading,
+            error,
+            registrationCompleted,
+            registrationStep,
+            forgotPassword,
+            isLoggedIn,
+            hasTokens,
+            canRefresh,
+            login,
+            register,
+            logout,
+            startRegistration,
+            verifyRegistration,
+            resendVerificationCodeAction,
+            requestPasswordResetAction,
+            verifyResetCodeAction,
+            confirmPasswordResetAction,
+            refreshAuthToken,
+            fetchUserData,
+            restoreAuthSession,
+            clearAuthError,
+            clearAuthState,
+            clearRegistrationCompletedFlag,
+            setStep,
+            resetStep,
+            setForgotPasswordAction,
+            resetForgotPassword,
+            clearStorage,
+            hasRole,
+            isAdmin,
+            isSuperAdmin,
+            canAccessAdmin,
+            canAccessSuperAdmin,
+        ]
+    );
 };
 
 export default useAuth;

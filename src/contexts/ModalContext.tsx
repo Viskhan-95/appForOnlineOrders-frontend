@@ -5,10 +5,7 @@ import React, {
     useCallback,
     ReactNode,
 } from "react";
-import ErrorModal from "../components/modals/ErrorModal";
-import SuccessModal from "../components/modals/SuccessModal";
-import InfoModal from "../components/modals/InfoModal";
-import ConfirmModal from "../components/modals/ConfirmModal";
+import UniversalModal from "../components/modals/UniversalModal";
 
 export interface ModalState {
     type: "error" | "success" | "info" | "confirm" | null;
@@ -24,7 +21,7 @@ export interface ModalState {
     showCloseButton?: boolean;
     autoClose?: boolean;
     autoCloseDelay?: number;
-    type?: "warning" | "danger" | "info";
+    variant?: "warning" | "danger" | "info";
 }
 
 interface ModalContextType {
@@ -116,7 +113,7 @@ export const ModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
                 cancelText: "Отмена",
                 onConfirm,
                 showCloseButton: true,
-                type: "warning",
+                variant: "warning",
                 ...options,
             });
         },
@@ -143,53 +140,25 @@ export const ModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
         <ModalContext.Provider value={contextValue}>
             {children}
 
-            {/* Рендерим модалки */}
-            <ErrorModal
-                visible={modalState.type === "error" && modalState.visible}
-                onClose={hideModal}
-                title={modalState.title}
-                message={modalState.message}
-                buttonText={modalState.buttonText}
-                onButtonPress={modalState.onButtonPress}
-                showCloseButton={modalState.showCloseButton}
-            />
-
-            <SuccessModal
-                visible={modalState.type === "success" && modalState.visible}
-                onClose={hideModal}
-                title={modalState.title}
-                message={modalState.message}
-                buttonText={modalState.buttonText}
-                onButtonPress={modalState.onButtonPress}
-                showCloseButton={modalState.showCloseButton}
-                autoClose={modalState.autoClose}
-                autoCloseDelay={modalState.autoCloseDelay}
-            />
-
-            <InfoModal
-                visible={modalState.type === "info" && modalState.visible}
-                onClose={hideModal}
-                title={modalState.title}
-                message={modalState.message}
-                buttonText={modalState.buttonText}
-                onButtonPress={modalState.onButtonPress}
-                showCloseButton={modalState.showCloseButton}
-                autoClose={modalState.autoClose}
-                autoCloseDelay={modalState.autoCloseDelay}
-            />
-
-            <ConfirmModal
-                visible={modalState.type === "confirm" && modalState.visible}
-                onClose={hideModal}
-                title={modalState.title}
-                message={modalState.message}
-                confirmText={modalState.confirmText}
-                cancelText={modalState.cancelText}
-                onConfirm={modalState.onConfirm || (() => {})}
-                onCancel={modalState.onCancel}
-                type={modalState.type as "warning" | "danger" | "info"}
-                showCloseButton={modalState.showCloseButton}
-            />
+            {/* Рендерим универсальную модалку */}
+            {modalState.type && (
+                <UniversalModal
+                    visible={modalState.visible}
+                    onClose={hideModal}
+                    type={modalState.type}
+                    title={modalState.title || ""}
+                    message={modalState.message}
+                    confirmText={
+                        modalState.confirmText || modalState.buttonText
+                    }
+                    cancelText={modalState.cancelText}
+                    onConfirm={modalState.onConfirm || modalState.onButtonPress}
+                    onCancel={modalState.onCancel}
+                    showCloseButton={modalState.showCloseButton}
+                    autoClose={modalState.autoClose}
+                    autoCloseDelay={modalState.autoCloseDelay}
+                />
+            )}
         </ModalContext.Provider>
     );
 };

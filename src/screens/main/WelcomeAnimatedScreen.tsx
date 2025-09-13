@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, View, Text } from "react-native";
 import LottieView from "lottie-react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { COLORS, GRADIENT_COLORS } from "../../utils/constans/colors";
+import { COLORS, GRADIENT_COLORS } from "../../utils/constants/colors";
 import { rh, rw } from "../../utils/responsive";
 import { useAppLoading } from "../../hooks/useAppLoading";
 

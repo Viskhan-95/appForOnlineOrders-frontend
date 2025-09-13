@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, TouchableOpacity, Image, View } from "react-native";
 import { rh, rw } from "../../utils/responsive";
 import { LinearGradient } from "expo-linear-gradient";
-import { GRADIENT_COLORS } from "../../utils/constans/colors";
+import { GRADIENT_COLORS } from "../../utils/constants/colors";
 
 type ArrowBackProps = {
     gradientColors?: readonly string[];

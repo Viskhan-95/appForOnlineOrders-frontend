@@ -6,8 +6,8 @@ import {
     ImageBackground,
     TouchableOpacity,
 } from "react-native";
-import { COLORS, GRADIENT_COLORS } from "../../utils/constans/colors";
-import { SIZES } from "../../utils/constans/sizes";
+import { COLORS, GRADIENT_COLORS } from "../../utils/constants/colors";
+import { SIZES } from "../../utils/constants/sizes";
 import Header from "../../components/ui/Header";
 import Title from "../../components/ui/Title";
 import Subtitle from "../../components/ui/Subtitle";
@@ -22,6 +22,8 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, type LoginFormData } from "../../validations/schemas";
 import useAuth from "../../hooks/useAuth";
+import useBackendErrorHandler from "../../hooks/useBackendErrorHandler";
+import ErrorTestComponent from "../../components/test/ErrorTestComponent";
 
 const AuthScreen: React.FC = () => {
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -43,14 +45,15 @@ const AuthScreen: React.FC = () => {
     });
 
     const { login, isLoading, error, clearAuthError } = useAuth();
+    const { handleLoginError } = useBackendErrorHandler();
 
     const onSubmit = async (data: LoginFormData) => {
         try {
             await login(data);
             // Успешный вход - навигация произойдет автоматически
         } catch (err) {
-            // Ошибка уже обработана в Redux
-            console.error("Login failed:", err);
+            // Обрабатываем ошибку логина с показом соответствующей модалки
+            handleLoginError(err);
         }
     };
 
@@ -156,6 +159,9 @@ const AuthScreen: React.FC = () => {
                             <Text>{isLoading ? "Вход..." : "Войти"}</Text>
                         </Button>
                     </View>
+
+                    {/* Тестовый компонент для демонстрации ошибок (только в dev режиме) */}
+                    <ErrorTestComponent />
                 </KeyboardAwareScrollView>
             </SafeAreaView>
         </View>

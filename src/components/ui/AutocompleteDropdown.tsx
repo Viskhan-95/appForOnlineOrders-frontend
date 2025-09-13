@@ -7,7 +7,7 @@ import {
     StyleSheet,
 } from "react-native";
 import { rh, rw } from "../../utils/responsive";
-import { COLORS } from "../../utils/constans/colors";
+import { COLORS } from "../../utils/constants/colors";
 
 type Option = { label: string; fiasId?: string };
 

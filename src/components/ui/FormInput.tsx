@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import {
     Image,
     ImageSourcePropType,
@@ -9,10 +9,10 @@ import {
     TouchableOpacity,
     View,
 } from "react-native";
-import { COLORS } from "../../utils/constans/colors";
-import { SIZES } from "../../utils/constans/sizes";
+import { COLORS } from "../../utils/constants/colors";
+import { SIZES } from "../../utils/constants/sizes";
 import { rh, rw } from "../../utils/responsive";
-import { TYPOGRAPHY } from "../../utils/constans/typography";
+import { TYPOGRAPHY } from "../../utils/constants/typography";
 
 type FormInputProps = {
     placeholder: string;
@@ -63,89 +63,101 @@ type FormInputProps = {
         | "streetAddressLine2";
 };
 
-const FormInput: React.FC<FormInputProps> = ({
-    placeholder,
-    value,
-    secureTextEntry,
-    icon,
-    iconPassword,
-    iconEyeOff,
-    iconEye,
-    rightIcon,
-    rightComponent,
-    onChangeText,
-    onTogglePassword,
-    isPasswordVisible,
-    onFocus,
-    onBlur,
-    editable,
-    keyboardType,
-    maxLength,
-    autoFocus,
-    inputMode,
-    autoComplete,
-    textContentType,
-}) => {
-    const [focused, setFocused] = useState(false);
+const FormInput: React.FC<FormInputProps> = React.memo(
+    ({
+        placeholder,
+        value,
+        secureTextEntry,
+        icon,
+        iconPassword,
+        iconEyeOff,
+        iconEye,
+        rightIcon,
+        rightComponent,
+        onChangeText,
+        onTogglePassword,
+        isPasswordVisible,
+        onFocus,
+        onBlur,
+        editable,
+        keyboardType,
+        maxLength,
+        autoFocus,
+        inputMode,
+        autoComplete,
+        textContentType,
+    }) => {
+        const [focused, setFocused] = useState(false);
 
-    const handleFocus = () => {
-        setFocused(true);
-        onFocus && onFocus();
-    };
+        const handleFocus = () => {
+            setFocused(true);
+            onFocus && onFocus();
+        };
 
-    const handleBlur = () => {
-        setFocused(false);
-        onBlur && onBlur();
-    };
+        const handleBlur = () => {
+            setFocused(false);
+            onBlur && onBlur();
+        };
 
-    const showCustomPlaceholder = !focused && !value;
+        // Мемоизируем вычисления для оптимизации производительности
+        const showCustomPlaceholder = useMemo(
+            () => !focused && !value,
+            [focused, value]
+        );
 
-    return (
-        <View style={styles.container}>
-            {icon && <Image source={icon} />}
-            {iconPassword && <Image source={iconPassword} />}
-            <View style={styles.inputWrap}>
-                {showCustomPlaceholder && (
-                    <Text style={styles.placeholderXs} numberOfLines={1}>
-                        {placeholder}
-                    </Text>
-                )}
-                <TextInput
-                    style={styles.input}
-                    placeholder={""}
-                    placeholderTextColor={COLORS.textSecondary}
-                    secureTextEntry={secureTextEntry}
-                    value={value}
-                    onChangeText={onChangeText}
-                    onFocus={handleFocus}
-                    onBlur={handleBlur}
-                    editable={editable}
-                    keyboardType={keyboardType}
-                    maxLength={maxLength}
-                    autoFocus={autoFocus}
-                    inputMode={inputMode}
-                    autoComplete={autoComplete as any}
-                    textContentType={textContentType as any}
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                />
-            </View>
-            {onTogglePassword && (
-                <TouchableOpacity onPress={onTogglePassword}>
-                    <Image source={isPasswordVisible ? iconEye : iconEyeOff} />
-                </TouchableOpacity>
-            )}
-            {rightIcon && (
-                <View style={styles.rightIconContainer}>
-                    <Image source={rightIcon} style={styles.rightIcon} />
+        return (
+            <View style={styles.container}>
+                {icon && <Image source={icon} />}
+                {iconPassword && <Image source={iconPassword} />}
+                <View style={styles.inputWrap}>
+                    {showCustomPlaceholder && (
+                        <Text style={styles.placeholderXs} numberOfLines={1}>
+                            {placeholder}
+                        </Text>
+                    )}
+                    <TextInput
+                        style={styles.input}
+                        placeholder={""}
+                        placeholderTextColor={COLORS.textSecondary}
+                        secureTextEntry={secureTextEntry}
+                        value={value}
+                        onChangeText={onChangeText}
+                        onFocus={handleFocus}
+                        onBlur={handleBlur}
+                        editable={editable}
+                        keyboardType={keyboardType}
+                        maxLength={maxLength}
+                        autoFocus={autoFocus}
+                        inputMode={inputMode}
+                        autoComplete={autoComplete as any}
+                        textContentType={textContentType as any}
+                        autoCapitalize="none"
+                        autoCorrect={false}
+                    />
                 </View>
-            )}
-            {rightComponent && (
-                <View style={styles.rightIconContainer}>{rightComponent}</View>
-            )}
-        </View>
-    );
-};
+                {onTogglePassword && (
+                    <TouchableOpacity onPress={onTogglePassword}>
+                        <Image
+                            source={isPasswordVisible ? iconEye : iconEyeOff}
+                        />
+                    </TouchableOpacity>
+                )}
+                {rightIcon && (
+                    <View style={styles.rightIconContainer}>
+                        <Image source={rightIcon} style={styles.rightIcon} />
+                    </View>
+                )}
+                {rightComponent && (
+                    <View style={styles.rightIconContainer}>
+                        {rightComponent}
+                    </View>
+                )}
+            </View>
+        );
+    }
+);
+
+FormInput.displayName = "FormInput";
 
 export default FormInput;
 

@@ -1,6 +1,6 @@
-import { COLORS } from "./constans/colors";
-import { SIZES } from "./constans/sizes";
-import { TYPOGRAPHY } from "./constans/typography";
+import { COLORS } from "./constants/colors";
+import { SIZES } from "./constants/sizes";
+import { TYPOGRAPHY } from "./constants/typography";
 import { StatusBar } from "expo-status-bar";
 
 export const DarkTheme = {

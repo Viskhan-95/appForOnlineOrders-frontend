@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Controller, useFormContext } from "react-hook-form";
 import FormInput from "../ui/FormInput";
-import { COLORS } from "../../utils/constans/colors";
+import { COLORS } from "../../utils/constants/colors";
 import { rh } from "../../utils/responsive";
 
 type Props = React.ComponentProps<typeof FormInput> & {
@@ -46,6 +46,7 @@ const styles = StyleSheet.create({
         marginTop: rh(0.5),
     },
 });
+
 
 
 

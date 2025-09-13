@@ -1,13 +1,7 @@
-import { useEffect } from 'react';
-import { useAuth } from '../hooks/useAuth';
+import React from "react";
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const { restoreAuthSession } = useAuth();
-
-    useEffect(() => {
-        // Восстанавливаем сессию при запуске приложения
-        restoreAuthSession();
-    }, [restoreAuthSession]);
-
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
+    children,
+}) => {
     return <>{children}</>;
 };

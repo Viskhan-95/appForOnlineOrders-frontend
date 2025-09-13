@@ -1,8 +1,8 @@
 import React from "react";
 import { Text, TouchableOpacity, StyleSheet } from "react-native";
-import { COLORS, GRADIENT_COLORS } from "../../utils/constans/colors";
-import { TYPOGRAPHY } from "../../utils/constans/typography";
-import { SIZES } from "../../utils/constans/sizes";
+import { COLORS, GRADIENT_COLORS } from "../../utils/constants/colors";
+import { TYPOGRAPHY } from "../../utils/constants/typography";
+import { SIZES } from "../../utils/constants/sizes";
 import { LinearGradient } from "expo-linear-gradient";
 import { rw } from "../../utils/responsive";
 
@@ -11,7 +11,7 @@ type ButtonProps = {
     backgroundColor?: string;
     textColor?: string;
     gradientColors?: readonly string[];
-    disabled?: boolean
+    disabled?: boolean;
     onPress?: () => void;
 };
 
@@ -40,7 +40,8 @@ const Button: React.FC<ButtonProps> = ({
     }
 
     return (
-        <TouchableOpacity onPress={onPress}
+        <TouchableOpacity
+            onPress={onPress}
             style={[styles.button, { backgroundColor }]}
             {...props}
         >

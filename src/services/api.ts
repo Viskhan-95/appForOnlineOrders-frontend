@@ -1,9 +1,32 @@
-import { AxiosInstance, AxiosResponse } from "axios";
+import { AxiosInstance, AxiosResponse, AxiosError } from "axios";
 import { baseApiClient } from "./axiosConfig";
 import { store } from "../store";
+import ErrorService from "./errorService";
+import RetryService from "./retryService";
 
 // API клиент с интерцепторами
 const apiClient: AxiosInstance = baseApiClient;
+
+// Добавляем retry interceptor
+const retryInterceptor = RetryService.createRetryInterceptor({
+    maxRetries: 3,
+    baseDelay: 1000,
+    maxDelay: 5000,
+    onRetry: (attempt, error) => {
+        if (__DEV__) {
+            console.log(`🔄 Retrying API request (attempt ${attempt}):`, {
+                url: error.config?.url,
+                method: error.config?.method,
+                status: error.response?.status,
+            });
+        }
+    },
+});
+
+apiClient.interceptors.response.use(
+    retryInterceptor.onFulfilled,
+    retryInterceptor.onRejected
+);
 
 // Интерцептор для автоматического добавления токена
 apiClient.interceptors.request.use(
@@ -38,12 +61,9 @@ apiClient.interceptors.response.use(
 
                 if (refreshToken) {
                     // Пытаемся обновить токен
-                    const response = await axios.post(
-                        `${API_URL}/auth/refresh`,
-                        {
-                            refreshToken,
-                        }
-                    );
+                    const response = await baseApiClient.post("/auth/refresh", {
+                        refreshToken,
+                    });
 
                     const { accessToken, refreshToken: newRefreshToken } =
                         response.data;
@@ -64,7 +84,13 @@ apiClient.interceptors.response.use(
             }
         }
 
-        return Promise.reject(error);
+        // Логируем ошибку для разработки
+        ErrorService.logError(error, "API Response Interceptor");
+
+        // Обрабатываем ошибку через централизованный сервис
+        const processedError = ErrorService.handleApiError(error);
+
+        return Promise.reject(processedError);
     }
 );
 
